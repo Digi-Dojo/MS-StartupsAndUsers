@@ -11,43 +11,68 @@ import java.util.Optional;
 @Service
 public class ManageTeamMember {
     private TeamMemberRepository teamMemberRepository;
-    private TeamMemberRepository teamMemberRepositoryMultiple;
 
     @Autowired
-    public ManageTeamMember(TeamMemberRepository teamMemberRepository, TeamMemberRepository teamMemberRepositoryMultiple){
+    public ManageTeamMember(TeamMemberRepository teamMemberRepository){
         this.teamMemberRepository = teamMemberRepository;
-        this.teamMemberRepositoryMultiple = teamMemberRepositoryMultiple;
     }
 
     public TeamMember findByTeamMemberId(Long id){
         Optional<TeamMember> maybeTeamMember = teamMemberRepository.findByTeamMemberId(id);
 
         if(maybeTeamMember.isEmpty()){
-            throw new IllegalArgumentException("Team Member #" + id + "not found");
+            throw new IllegalArgumentException("Team Member with the id #" + id + " not found");
+        }
+        return maybeTeamMember.get();
+    }
+
+    public TeamMember findByUserId(Long id){
+        Optional<TeamMember> maybeTeamMember = teamMemberRepository.findByUserId(id);
+
+        if(maybeTeamMember.isEmpty()){
+            throw new IllegalArgumentException("User with id #" + id + " not found");
         }
         return maybeTeamMember.get();
     }
 
     public List<TeamMember> findByRole(String role){
-        Optional<List<TeamMember>> maybeExistRole = teamMemberRepositoryMultiple.findByRole(role);
+        Optional<List<TeamMember>> maybeExistRole = teamMemberRepository.findByRole(role);
 
         if(maybeExistRole.isEmpty()){
-            throw new IllegalArgumentException("Team Member with role #" + role + "not found");
+            throw new IllegalArgumentException("Team Member with role #" + role + " not found");
         }
         return maybeExistRole.get();
     }
 
-    public List<TeamMember> findUsersRole(Long id){
-        Optional<List<TeamMember>> maybeHasMultipleRole = teamMemberRepositoryMultiple.findUsersRole(id);
+    public List<TeamMember> findUsersByRole(String role){
+        Optional<List<TeamMember>> maybeHasMultipleRole = teamMemberRepository.findUsersByRole(role);
 
         if(maybeHasMultipleRole.isEmpty()){
-            throw new IllegalArgumentException("Team User with id #" + id + "doesn't have any role");
+            throw new IllegalArgumentException("No Team Member with role #" + role + " present yet");
         }
+
         return maybeHasMultipleRole.get();
     }
 
     public TeamMember createTeamMember(User user, String role) {
-        //Todo: could a user participate in more than one start up?
-        return null;
+        Optional<TeamMember> maybeTeamMember = teamMemberRepository.findByUserId(user.getId());
+
+        if(maybeTeamMember.isEmpty()){
+            throw new IllegalArgumentException("No Team with User id #" + user.getId() + " present yet");
+        }
+
+        return teamMemberRepository.save(new TeamMember(user, role));
     }
+
+    public void deleteTeamMember(User user) {
+        Optional<TeamMember> maybeTeamMember = teamMemberRepository.findByUserId(user.getId());
+
+        if(maybeTeamMember.isEmpty()){
+            throw new IllegalArgumentException("No Team with User id #" + user.getId() + " present yet");
+        }
+
+        teamMemberRepository.delete(maybeTeamMember.get());
+    }
+
+
 }

@@ -19,7 +19,7 @@ public class TeamMember {
     public TeamMember() {
     }
 
-    public TeamMember(Long teamMemberID, User user, String role){
+    public TeamMember(User user, String role){
         this.teamMemberID = teamMemberID;
         this.user = user;
         this.role = role;
