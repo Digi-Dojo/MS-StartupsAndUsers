@@ -1,13 +1,12 @@
-package com.startupsdigidojo.usersandteams.startup.domain;
+package com.startupsdigidojo.usersandteams.domain.Startup;
 
+import com.startupsdigidojo.usersandteams.domain.Startup.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-
 import java.util.Optional;
-
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
