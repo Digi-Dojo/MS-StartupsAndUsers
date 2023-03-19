@@ -54,10 +54,20 @@ public class ManageTeamMember {
         return maybeHasMultipleRole.get();
     }
 
-    public TeamMember createTeamMember(User user, String role) {
-        Optional<TeamMember> maybeTeamMember = teamMemberRepository.findByUserId(user.getId());
+    public TeamMember findByName(String name){
+        Optional<TeamMember> maybeTeamMember = teamMemberRepository.findByName(name);
 
         if(maybeTeamMember.isEmpty()){
+            throw new IllegalArgumentException("No Team Member with name #" + name + " present yet");
+        }
+
+        return maybeTeamMember.get();
+    }
+
+    public TeamMember createTeamMember(User user, String role) {
+        Optional<TeamMember> maybeTeamMember = teamMemberRepository.findByName(user.getName());
+
+        if(maybeTeamMember.isPresent()){
             throw new IllegalArgumentException("No Team with User id #" + user.getId() + " present yet");
         }
 
@@ -72,6 +82,16 @@ public class ManageTeamMember {
         }
 
         teamMemberRepository.delete(maybeTeamMember.get());
+    }
+
+    public void updateTeamMemberRole(User user, String role){
+        Optional<TeamMember> maybeTeamMember = teamMemberRepository.findByUserId(user.getId());
+
+        if(maybeTeamMember.isEmpty()){
+            throw new IllegalArgumentException("No User with id #" + user.getId() + " present in any Team yet");
+        }
+
+        teamMemberRepository.save(new TeamMember(user, role));
     }
 
 

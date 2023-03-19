@@ -11,7 +11,7 @@ public class TeamMember {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long teamMemberID;
 
-    @OneToMany
+    @Column(unique = true)
     private User user;
 
     private String role;
@@ -20,7 +20,6 @@ public class TeamMember {
     }
 
     public TeamMember(User user, String role){
-        this.teamMemberID = teamMemberID;
         this.user = user;
         this.role = role;
     }
