@@ -1,7 +1,5 @@
-package com.startupsdigidojo.usersandteams.application.TeamMemberDTOandController;
+package com.startupsdigidojo.usersandteams.application.UserDTOandController;
 
-import com.startupsdigidojo.usersandteams.domain.Teams.ManageTeamMember;
-import com.startupsdigidojo.usersandteams.domain.Teams.TeamMember;
 import com.startupsdigidojo.usersandteams.domain.User.ManageUsers;
 import com.startupsdigidojo.usersandteams.domain.User.SearchUsers;
 import com.startupsdigidojo.usersandteams.domain.User.User;

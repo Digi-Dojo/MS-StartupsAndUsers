@@ -26,11 +26,15 @@ public class ManageTeamMember {
         return maybeTeamMember.get();
     }
 
-    public TeamMember findByUserId(Long id){
-        Optional<TeamMember> maybeTeamMember = teamMemberRepository.findByUserId(id);
+    /*
+        A User could appear in more than one Start up
+     */
 
-        if(maybeTeamMember.isEmpty()){
-            throw new IllegalArgumentException("User with id #" + id + " not found");
+    public List<TeamMember> findAllByUserId(Long id){
+        Optional<List<TeamMember>> maybeTeamMember = Optional.of(teamMemberRepository.findAllById(id));
+
+        if(maybeTeamMember.get().isEmpty()){
+            throw new IllegalArgumentException("Users with id #" + id + " not found");
         }
         return maybeTeamMember.get();
     }
@@ -84,14 +88,15 @@ public class ManageTeamMember {
         teamMemberRepository.delete(maybeTeamMember.get());
     }
 
-    public void updateTeamMemberRole(User user, String role){
-        Optional<TeamMember> maybeTeamMember = teamMemberRepository.findByUserId(user.getId());
+    public TeamMember updateTeamMemberRole(Long id, String oldRole, String newRole){
+        Optional<TeamMember> maybeTeamMember = teamMemberRepository.findById(id);
+        maybeTeamMember = teamMemberRepository.findByName(oldRole);
 
         if(maybeTeamMember.isEmpty()){
-            throw new IllegalArgumentException("No User with id #" + user.getId() + " present in any Team yet");
+            throw new IllegalArgumentException("No User with id TeamMember #" + id + " present in any Team yet");
         }
 
-        teamMemberRepository.save(new TeamMember(user, role));
+        return teamMemberRepository.save(new TeamMember(maybeTeamMember.get().getUser(), newRole));
     }
 
 
