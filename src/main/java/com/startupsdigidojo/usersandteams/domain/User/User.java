@@ -1,11 +1,14 @@
-package com.startupsdigidojo.usersandteams.domain;
+package com.startupsdigidojo.usersandteams.domain.User;
 
 import jakarta.persistence.*;
 
 @Entity
 public class User {
 
-    public User(String name,String mailAddress, String password){
+    public User() {
+    }
+
+    public User(String name, String mailAddress, String password){
         this.name = name;
         this.mailAddress = mailAddress;
         this.password = password;

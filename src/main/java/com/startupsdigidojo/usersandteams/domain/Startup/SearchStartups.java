@@ -1,4 +1,4 @@
-package com.startupsdigidojo.usersandteams.startup.domain;
+package com.startupsdigidojo.usersandteams.domain.Startup;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

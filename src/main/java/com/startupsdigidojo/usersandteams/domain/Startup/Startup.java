@@ -1,4 +1,4 @@
-package com.startupsdigidojo.usersandteams.startup.domain;
+package com.startupsdigidojo.usersandteams.domain.Startup;
 
 import jakarta.persistence.*;
 
