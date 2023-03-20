@@ -24,6 +24,12 @@ public class TeamMember {
         this.role = role;
     }
 
+    public TeamMember(Long teamMemberID, User user, String role){
+        this.teamMemberID = teamMemberID;
+        this.user = user;
+        this.role = role;
+    }
+
     public User getUser() {
         return user;
     }
