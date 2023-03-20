@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping(path = "/v1/battleships")
+@RequestMapping(path = "/usersandteams")
 public class TeamMemberController {
     private ManageTeamMember manageTeamMember;
 

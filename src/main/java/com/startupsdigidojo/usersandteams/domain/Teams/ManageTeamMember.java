@@ -27,7 +27,7 @@ public class ManageTeamMember {
     }
 
     public TeamMember findByUserId(Long id){
-        Optional<TeamMember> maybeTeamMember = teamMemberRepository.findByUserId(id);
+        Optional<TeamMember> maybeTeamMember = teamMemberRepository.findByPuserId(id);
 
         if(maybeTeamMember.isEmpty()){
             throw new IllegalArgumentException("User with id #" + id + " not found");
@@ -55,7 +55,7 @@ public class ManageTeamMember {
     }
 
     public TeamMember findByName(String name){
-        Optional<TeamMember> maybeTeamMember = teamMemberRepository.findByName(name);
+        Optional<TeamMember> maybeTeamMember = teamMemberRepository.findByPuserName(name);
 
         if(maybeTeamMember.isEmpty()){
             throw new IllegalArgumentException("No Team Member with name #" + name + " present yet");
@@ -65,7 +65,7 @@ public class ManageTeamMember {
     }
 
     public TeamMember createTeamMember(User user, String role) {
-        Optional<TeamMember> maybeTeamMember = teamMemberRepository.findByName(user.getName());
+        Optional<TeamMember> maybeTeamMember = teamMemberRepository.findByPuserName(user.getName());
 
         if(maybeTeamMember.isPresent()){
             throw new IllegalArgumentException("No Team with User id #" + user.getId() + " present yet");
@@ -75,7 +75,7 @@ public class ManageTeamMember {
     }
 
     public void deleteTeamMember(User user) {
-        Optional<TeamMember> maybeTeamMember = teamMemberRepository.findByUserId(user.getId());
+        Optional<TeamMember> maybeTeamMember = teamMemberRepository.findByPuserId(user.getId());
 
         if(maybeTeamMember.isEmpty()){
             throw new IllegalArgumentException("No Team with User id #" + user.getId() + " present yet");
@@ -85,7 +85,7 @@ public class ManageTeamMember {
     }
 
     public void updateTeamMemberRole(User user, String role){
-        Optional<TeamMember> maybeTeamMember = teamMemberRepository.findByUserId(user.getId());
+        Optional<TeamMember> maybeTeamMember = teamMemberRepository.findByPuserId(user.getId());
 
         if(maybeTeamMember.isEmpty()){
             throw new IllegalArgumentException("No User with id #" + user.getId() + " present in any Team yet");
