@@ -1,4 +1,4 @@
-package com.startupsdigidojo.usersandteams.application.TeamMemberDTOandController;
+package com.startupsdigidojo.usersandteams.application.User;
 
 public class UserDTO {
 

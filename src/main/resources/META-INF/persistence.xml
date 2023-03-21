@@ -5,7 +5,7 @@
              version="3.0">
   <persistence-unit name="default">
     <class>com.startupsdigidojo.usersandteams.domain.User.User</class>
-    <class>com.startupsdigidojo.usersandteams.domain.Teams.TeamMember</class>
+    <class>com.startupsdigidojo.usersandteams.domain.TeamMember.TeamMember</class>
     <class>com.startupsdigidojo.usersandteams.domain.Startup.Startup</class>
     <properties>
       <property
