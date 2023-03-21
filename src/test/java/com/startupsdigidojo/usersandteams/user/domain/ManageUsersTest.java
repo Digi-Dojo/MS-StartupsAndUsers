@@ -125,6 +125,22 @@ public class ManageUsersTest {
         assertThatThrownBy(() -> underTest.deleteUser(userName, userMail, userPassword)).isInstanceOf(IllegalArgumentException.class);
     }
 
+    @Test
+    public void UpdatesMailAddressThrowsExceptionForAlreadyExistingNewMailAddress() {
+        User user = new User("testUser", "testUser@testmail.com", "testPassword");
+        when(userRepository.findByMailAddress(anyString())).thenReturn(Optional.of(new User("testUser", "testUser@testmail.com", "testPassword" )));
+
+        assertThatThrownBy(() -> underTest.updateUserMail(user.getMailAddress(), user.getMailAddress())).isInstanceOf(IllegalArgumentException.class);
+    }
+
+    @Test
+    public void UpdatesMailAddressThrowsExceptionForNonExistingOldMailAddress() {
+        User user = new User("testUser", "testUser@testmail.com", "testPassword");
+        when(userRepository.findByMailAddress(anyString())).thenReturn(Optional.of(new User("testUser", "testUser@testmail.com", "testPassword" )));
+
+        assertThatThrownBy(() -> underTest.updateUserMail("NonExistingMail", user.getMailAddress())).isInstanceOf(IllegalArgumentException.class);
+    }
+
     private Long randomPositiveLong() {
         long leftLimit = 1L;
         long rightLimit = 1000L;
