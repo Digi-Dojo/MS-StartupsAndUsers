@@ -46,20 +46,4 @@ public class ManageUsers {
 
         return userRepository.save(new User(name, mailAddress, password));
     }
-
-    public User updateMailAddress(String oldMailAddress, String newMailAddress) {
-        Optional<User> maybeUser = userRepository.findByMailAddress(newMailAddress);
-
-        if (maybeUser.isPresent()) {
-            throw new IllegalArgumentException("User with mail address " + newMailAddress + "already exists");
-        }
-
-        maybeUser = userRepository.findByMailAddress(oldMailAddress);
-        if(maybeUser.isEmpty()) {
-            throw new IllegalArgumentException("User with mail address " + oldMailAddress + "does not exist");
-        }
-
-        User user = maybeUser.get();
-        return userRepository.save(new User(user.getName(), newMailAddress, user.getPassword()));
-    }
 }
