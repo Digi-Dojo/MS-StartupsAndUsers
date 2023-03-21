@@ -9,7 +9,7 @@ public class TeamMember {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long teamMemberId;
+    private Long id;
 
     @OneToOne
     private User puser;
@@ -24,8 +24,8 @@ public class TeamMember {
         this.role = role;
     }
 
-    public TeamMember(Long teamMemberId, User puser, String role) {
-        this.teamMemberId = teamMemberId;
+    public TeamMember(Long id, User puser, String role) {
+        this.id = id;
         this.puser = puser;
         this.role = role;
     }
@@ -38,16 +38,16 @@ public class TeamMember {
         this.puser = user;
     }
 
-    public Long getTeamMemberId() {
-        return teamMemberId;
+    public Long getId() {
+        return id;
     }
 
     public String getRole() {
         return role;
     }
 
-    public void setTeamMemberId(Long teamMemberID) {
-        this.teamMemberId = teamMemberID;
+    public void setId(Long teamMemberID) {
+        this.id = teamMemberID;
     }
 
     public void setRole(String role) {

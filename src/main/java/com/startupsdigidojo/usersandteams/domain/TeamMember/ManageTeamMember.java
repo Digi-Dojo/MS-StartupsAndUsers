@@ -18,7 +18,7 @@ public class ManageTeamMember {
     }
 
     public TeamMember findByTeamMemberId(Long id){
-        Optional<TeamMember> maybeTeamMember = teamMemberRepository.findByTeamMemberId(id);
+        Optional<TeamMember> maybeTeamMember = teamMemberRepository.findById(id);
 
         if(maybeTeamMember.isEmpty()){
             throw new IllegalArgumentException("Team Member with the id #" + id + " not found");
@@ -40,7 +40,7 @@ public class ManageTeamMember {
      */
 
     public List<TeamMember> findAllByUserId(Long id){
-        Optional<List<TeamMember>> maybeTeamMember = Optional.of(teamMemberRepository.findAllByTeamMemberId(id));
+        Optional<List<TeamMember>> maybeTeamMember = Optional.of(teamMemberRepository.findAllByPuserId(id));
 
         if(maybeTeamMember.get().isEmpty()){
             throw new IllegalArgumentException("Users with id #" + id + " not found");
