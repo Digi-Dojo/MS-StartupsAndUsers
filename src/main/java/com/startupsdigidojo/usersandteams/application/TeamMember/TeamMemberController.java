@@ -1,12 +1,12 @@
-package com.startupsdigidojo.usersandteams.application.TeamMemberDTOandController;
+package com.startupsdigidojo.usersandteams.application.TeamMember;
 
-import com.startupsdigidojo.usersandteams.domain.Teams.ManageTeamMember;
-import com.startupsdigidojo.usersandteams.domain.Teams.TeamMember;
+import com.startupsdigidojo.usersandteams.domain.TeamMember.ManageTeamMember;
+import com.startupsdigidojo.usersandteams.domain.TeamMember.TeamMember;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping(path = "/v1/battleships")
+@RequestMapping(path = "/v1/teammembers")
 public class TeamMemberController {
     private ManageTeamMember manageTeamMember;
 

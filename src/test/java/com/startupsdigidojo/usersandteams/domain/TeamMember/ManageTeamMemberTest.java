@@ -1,6 +1,5 @@
-package com.startupsdigidojo.usersandteams.domain.Teams;
+package com.startupsdigidojo.usersandteams.domain.TeamMember;
 
-import com.startupsdigidojo.usersandteams.domain.Startup.Startup;
 import com.startupsdigidojo.usersandteams.domain.User.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -35,7 +34,7 @@ public class ManageTeamMemberTest {
         user.setId(randomPositiveLong());
         TeamMember teamMember = new TeamMember(user, role);
 
-        when(teamMemberRepository.findByName(anyString()))
+        when(teamMemberRepository.findByPuserName(anyString()))
                 .thenReturn(Optional.empty());
         when(teamMemberRepository.save(any()))
                 .thenReturn(new TeamMember(user, teamMember.getRole()));
@@ -43,8 +42,8 @@ public class ManageTeamMemberTest {
         TeamMember result = underTest.createTeamMember(user, role);
 
         assertThat(result).isInstanceOf(TeamMember.class);
-        assertThat(result.getUser().getName()).isEqualTo(user.getName());
-        assertThat(result.getUser().getId())
+        assertThat(result.getPuser().getName()).isEqualTo(user.getName());
+        assertThat(result.getPuser().getId())
                 .isNotNull()
                 .isGreaterThan(0);
     }
@@ -56,7 +55,7 @@ public class ManageTeamMemberTest {
         String role = "Software Developer";
         user.setId(randomPositiveLong());
 
-        when(teamMemberRepository.findByName(anyString()))
+        when(teamMemberRepository.findByPuserName(anyString()))
                 .thenReturn(Optional.of(new TeamMember(user, role)));
 
 
@@ -72,7 +71,7 @@ public class ManageTeamMemberTest {
         Long id = randomPositiveLong();
 
 
-        when(teamMemberRepository.findByName(oldRole)).thenReturn(Optional.of(new TeamMember(id, user, oldRole)));
+        when(teamMemberRepository.findByPuserName(oldRole)).thenReturn(Optional.of(new TeamMember(id, user, oldRole)));
         when(teamMemberRepository.save(any())).thenReturn(new TeamMember(id, user, newRole));
 
         TeamMember teamMember = underTest.updateTeamMemberRole(id, oldRole, newRole);

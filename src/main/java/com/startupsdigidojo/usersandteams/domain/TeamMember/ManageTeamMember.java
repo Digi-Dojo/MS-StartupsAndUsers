@@ -1,4 +1,4 @@
-package com.startupsdigidojo.usersandteams.domain.Teams;
+package com.startupsdigidojo.usersandteams.domain.TeamMember;
 
 import com.startupsdigidojo.usersandteams.domain.User.User;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,12 +26,21 @@ public class ManageTeamMember {
         return maybeTeamMember.get();
     }
 
+    public TeamMember findByUserId(Long id){
+        Optional<TeamMember> maybeTeamMember = teamMemberRepository.findByPuserId(id);
+
+        if(maybeTeamMember.isEmpty()){
+            throw new IllegalArgumentException("User with id #" + id + " not found");
+        }
+        return maybeTeamMember.get();
+    }
+
     /*
         A User could appear in more than one Start up
      */
 
     public List<TeamMember> findAllByUserId(Long id){
-        Optional<List<TeamMember>> maybeTeamMember = Optional.of(teamMemberRepository.findAllById(id));
+        Optional<List<TeamMember>> maybeTeamMember = Optional.of(teamMemberRepository.findAllByTeamMemberId(id));
 
         if(maybeTeamMember.get().isEmpty()){
             throw new IllegalArgumentException("Users with id #" + id + " not found");
@@ -59,7 +68,7 @@ public class ManageTeamMember {
     }
 
     public TeamMember findByName(String name){
-        Optional<TeamMember> maybeTeamMember = teamMemberRepository.findByName(name);
+        Optional<TeamMember> maybeTeamMember = teamMemberRepository.findByPuserName(name);
 
         if(maybeTeamMember.isEmpty()){
             throw new IllegalArgumentException("No Team Member with name #" + name + " present yet");
@@ -69,7 +78,7 @@ public class ManageTeamMember {
     }
 
     public TeamMember createTeamMember(User user, String role) {
-        Optional<TeamMember> maybeTeamMember = teamMemberRepository.findByName(user.getName());
+        Optional<TeamMember> maybeTeamMember = teamMemberRepository.findByPuserName(user.getName());
 
         if(maybeTeamMember.isPresent()){
             throw new IllegalArgumentException("No Team with User id #" + user.getId() + " present yet");
@@ -79,7 +88,7 @@ public class ManageTeamMember {
     }
 
     public void deleteTeamMember(User user) {
-        Optional<TeamMember> maybeTeamMember = teamMemberRepository.findByUserId(user.getId());
+        Optional<TeamMember> maybeTeamMember = teamMemberRepository.findByPuserId(user.getId());
 
         if(maybeTeamMember.isEmpty()){
             throw new IllegalArgumentException("No Team with User id #" + user.getId() + " present yet");
@@ -89,15 +98,24 @@ public class ManageTeamMember {
     }
 
     public TeamMember updateTeamMemberRole(Long id, String oldRole, String newRole){
-        Optional<TeamMember> maybeTeamMember = teamMemberRepository.findById(id);
-        maybeTeamMember = teamMemberRepository.findByName(oldRole);
+        Optional<TeamMember> maybeTeamMember = teamMemberRepository.findByPuserName(oldRole);
 
         if(maybeTeamMember.isEmpty()){
             throw new IllegalArgumentException("No User with id TeamMember #" + id + " present in any Team yet");
         }
 
-        return teamMemberRepository.save(new TeamMember(maybeTeamMember.get().getUser(), newRole));
+        return teamMemberRepository.save(new TeamMember(maybeTeamMember.get().getPuser(), newRole));
     }
+/*
+    public void updateTeamMemberRole(User user, String role){
+        Optional<TeamMember> maybeTeamMember = teamMemberRepository.findByPuserId(user.getId());
 
+        if(maybeTeamMember.isEmpty()){
+            throw new IllegalArgumentException("No User with id #" + user.getId() + " present in any Team yet");
+        }
+
+        teamMemberRepository.save(new TeamMember(user, role));
+    }
+*/
 
 }

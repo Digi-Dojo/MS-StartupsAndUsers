@@ -16,14 +16,6 @@ public class ManageStartups {
     }
 
     public Startup createStartup(String name, String description) {
-        /*if (name == null || name.equals("")) {
-            throw new IllegalArgumentException("Name field cannot be empty");
-        }
-
-        //I assume that description is still a required parameter to instantiate a startup
-        if (description == null || description.equals("")){
-            throw new IllegalArgumentException("Description field cannot be empty");
-        }*/
 
         Optional<Startup> maybeStartup = startupRepository.findByName(name);
 
@@ -46,7 +38,8 @@ public class ManageStartups {
             throw new IllegalArgumentException("Startup with name " + oldName + " does not exist");
         }
         Startup startup = maybeStartup.get();
-        return startupRepository.save(new Startup(startup.getId(),newName,startup.getDescription()));
+        startup.setName(newName);
+        return startupRepository.save(startup);
     }
 
     public Startup updateStartupDescription(String name, String description){
@@ -57,7 +50,8 @@ public class ManageStartups {
         }
 
         Startup startup = maybeStartup.get();
-        return startupRepository.save(new Startup(startup.getId(),startup.getName(),description));
+        startup.setDescription(description);
+        return startupRepository.save(startup);
     }
 
     public void deleteStartup(String name){

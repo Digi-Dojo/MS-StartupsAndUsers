@@ -1,4 +1,4 @@
-package com.startupsdigidojo.usersandteams.application.UserDTOandController;
+package com.startupsdigidojo.usersandteams.application.User;
 
 import com.startupsdigidojo.usersandteams.domain.User.ManageUsers;
 import com.startupsdigidojo.usersandteams.domain.User.SearchUsers;
