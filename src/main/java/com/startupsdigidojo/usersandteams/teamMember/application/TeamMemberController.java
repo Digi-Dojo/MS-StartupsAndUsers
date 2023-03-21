@@ -25,4 +25,9 @@ public class TeamMemberController {
         return manageTeamMember.createTeamMember(dto.getUser(), dto.getRole());
     }
 
+    @DeleteMapping(path = "/delete")
+    public void deleteTeamMember(@RequestBody CreateTeamMemberDTO dto) {
+        manageTeamMember.deleteTeamMember(dto.getUser());
+    }
+
 }
