@@ -1,4 +1,4 @@
-package com.startupsdigidojo.usersandteams.domain.TeamMember;
+package com.startupsdigidojo.usersandteams.teamMember.domain;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;

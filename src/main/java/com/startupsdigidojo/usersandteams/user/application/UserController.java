@@ -1,8 +1,8 @@
-package com.startupsdigidojo.usersandteams.application.User;
+package com.startupsdigidojo.usersandteams.user.application;
 
-import com.startupsdigidojo.usersandteams.domain.User.ManageUsers;
-import com.startupsdigidojo.usersandteams.domain.User.SearchUsers;
-import com.startupsdigidojo.usersandteams.domain.User.User;
+import com.startupsdigidojo.usersandteams.user.domain.ManageUsers;
+import com.startupsdigidojo.usersandteams.user.domain.SearchUsers;
+import com.startupsdigidojo.usersandteams.user.domain.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 

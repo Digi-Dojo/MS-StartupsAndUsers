@@ -1,7 +1,7 @@
-package com.startupsdigidojo.usersandteams.application.TeamMember;
+package com.startupsdigidojo.usersandteams.teamMember.application;
 
-import com.startupsdigidojo.usersandteams.domain.TeamMember.ManageTeamMember;
-import com.startupsdigidojo.usersandteams.domain.TeamMember.TeamMember;
+import com.startupsdigidojo.usersandteams.teamMember.domain.ManageTeamMember;
+import com.startupsdigidojo.usersandteams.teamMember.domain.TeamMember;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 

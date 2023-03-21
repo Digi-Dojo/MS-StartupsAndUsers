@@ -1,6 +1,6 @@
-package com.startupsdigidojo.usersandteams.domain.TeamMember;
+package com.startupsdigidojo.usersandteams.teamMember.domain;
 
-import com.startupsdigidojo.usersandteams.domain.User.*;
+import com.startupsdigidojo.usersandteams.user.domain.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

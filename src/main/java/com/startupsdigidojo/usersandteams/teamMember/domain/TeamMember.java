@@ -1,7 +1,7 @@
-package com.startupsdigidojo.usersandteams.domain.TeamMember;
+package com.startupsdigidojo.usersandteams.teamMember.domain;
 
 
-import com.startupsdigidojo.usersandteams.domain.User.User;
+import com.startupsdigidojo.usersandteams.user.domain.User;
 import jakarta.persistence.*;
 
 @Entity

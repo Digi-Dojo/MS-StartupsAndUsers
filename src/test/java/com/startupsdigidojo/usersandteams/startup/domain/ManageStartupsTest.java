@@ -1,4 +1,4 @@
-package com.startupsdigidojo.usersandteams.domain.Startup;
+package com.startupsdigidojo.usersandteams.startup.domain;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

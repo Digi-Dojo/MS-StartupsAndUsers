@@ -1,6 +1,6 @@
-package com.startupsdigidojo.usersandteams.domain.TeamMember;
+package com.startupsdigidojo.usersandteams.teamMember.domain;
 
-import com.startupsdigidojo.usersandteams.domain.User.User;
+import com.startupsdigidojo.usersandteams.user.domain.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
