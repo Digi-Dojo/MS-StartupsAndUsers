@@ -16,6 +16,7 @@ import static org.mockito.Mockito.when;
 @ExtendWith(MockitoExtension.class)
 public class ManageTeamMemberTest {
     private ManageTeamMember underTest;
+    User user;
 
     @Mock
     private TeamMemberRepository teamMemberRepository;
@@ -23,13 +24,12 @@ public class ManageTeamMemberTest {
     @BeforeEach
     void setUp() {
         underTest = new ManageTeamMember(teamMemberRepository);
+        user = new User("Pippo", "pippo@unibz.it", "password");
     }
 
     @Test
     public void itCreatesATeamMember() {
-        // given
 
-        User user = new User("Pippo", "pippo@unibz.it", "password");
         String role = "Software Developer";
         user.setId(randomPositiveLong());
         TeamMember teamMember = new TeamMember(user, role);
@@ -61,6 +61,22 @@ public class ManageTeamMemberTest {
 
         assertThatThrownBy(() -> underTest.createTeamMember(user, role))
                 .isInstanceOf(IllegalArgumentException.class);
+    }
+
+    @Test
+    public void updateTeamMemberRole(){
+        User user = new User("Giamma", "giamma@unibz.it", "pswrd");
+        String oldRole = "Assistant";
+        String newRole = "Manager";
+        Long id = randomPositiveLong();
+
+
+        when(teamMemberRepository.findByPuserName(oldRole)).thenReturn(Optional.of(new TeamMember(id, user, oldRole)));
+        when(teamMemberRepository.save(any())).thenReturn(new TeamMember(id, user, newRole));
+
+        TeamMember teamMember = underTest.updateTeamMemberRole(id, oldRole, newRole);
+
+        assertThat(teamMember.getRole()).isEqualTo(newRole);
     }
 
     private Long randomPositiveLong() {

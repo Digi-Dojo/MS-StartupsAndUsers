@@ -35,6 +35,19 @@ public class ManageTeamMember {
         return maybeTeamMember.get();
     }
 
+    /*
+        A User could appear in more than one Start up
+     */
+
+    public List<TeamMember> findAllByUserId(Long id){
+        Optional<List<TeamMember>> maybeTeamMember = Optional.of(teamMemberRepository.findAllByTeamMemberId(id));
+
+        if(maybeTeamMember.get().isEmpty()){
+            throw new IllegalArgumentException("Users with id #" + id + " not found");
+        }
+        return maybeTeamMember.get();
+    }
+
     public List<TeamMember> findByRole(String role){
         Optional<List<TeamMember>> maybeExistRole = teamMemberRepository.findByRole(role);
 
@@ -84,6 +97,16 @@ public class ManageTeamMember {
         teamMemberRepository.delete(maybeTeamMember.get());
     }
 
+    public TeamMember updateTeamMemberRole(Long id, String oldRole, String newRole){
+        Optional<TeamMember> maybeTeamMember = teamMemberRepository.findByPuserName(oldRole);
+
+        if(maybeTeamMember.isEmpty()){
+            throw new IllegalArgumentException("No User with id TeamMember #" + id + " present in any Team yet");
+        }
+
+        return teamMemberRepository.save(new TeamMember(maybeTeamMember.get().getPuser(), newRole));
+    }
+/*
     public void updateTeamMemberRole(User user, String role){
         Optional<TeamMember> maybeTeamMember = teamMemberRepository.findByPuserId(user.getId());
 
@@ -93,6 +116,6 @@ public class ManageTeamMember {
 
         teamMemberRepository.save(new TeamMember(user, role));
     }
-
+*/
 
 }
