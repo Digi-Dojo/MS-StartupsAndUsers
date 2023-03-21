@@ -1,17 +1,20 @@
-package com.startupsdigidojo.usersandteams.domain;
+package com.startupsdigidojo.usersandteams.domain.User;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Optional;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.when;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-
+@ExtendWith(MockitoExtension.class)
 public class ManageUsersTest {
 
     private ManageUsers underTest;
@@ -60,6 +63,7 @@ public class ManageUsersTest {
         String userPassword = "testPassword";
         User user = new User(userOldName, userMail, userPassword);
         when(userRepository.findByMailAddress(userMail)).thenReturn(Optional.of(new User(userOldName, userMail, userPassword)));
+        when(userRepository.save(any())).thenReturn(new User(userNewName, userMail, userPassword));
 
         User effect = underTest.update(userNewName, userMail, userPassword);
 
@@ -67,21 +71,18 @@ public class ManageUsersTest {
     }
 
     @Test
-    public void UpdateUpdatesTheMailAddress() {
-
+    public void UpdateMailAddressUpdatesTheMailAddress() {
         String userName = "testUser";
-        String userOldMail = "OldMail@testmail.com";
-        String userNewMail = "NewMail@testmail.com";
-        String userPassword = "testPassword";
-        User user = new User(userName, userOldMail, userPassword);
-        Long Id = user.getId();
+        String oldMail = "oldMail@testmail.com";
+        String newMail = "newMail@testmail.com";
+        String password = "testPassword";
+        lenient().when(userRepository.findByMailAddress(oldMail)).thenReturn(Optional.empty());
+        lenient().when(userRepository.findByMailAddress(oldMail)).thenReturn(Optional.of(new User(userName, oldMail, password)));
+        lenient().when(userRepository.save(any())).thenReturn(new User(userName, newMail, password));
 
-        when(userRepository.findById(Id)).thenReturn(Optional.empty());
-        when(userRepository.save(any())).thenReturn(new User(userName, userOldMail, userPassword));
+        User effect = underTest.updateMailAddress(oldMail, newMail);
 
-        User effect = underTest.update(userName, userNewMail, userPassword);
-
-        assertThat(effect.getMailAddress()).isEqualTo(userNewMail);
+        assertThat(effect.getMailAddress()).isEqualTo(newMail);
     }
 
     @Test
@@ -94,8 +95,8 @@ public class ManageUsersTest {
         User user = new User(userName, userMail, userOldPassword);
         Long Id = user.getId();
 
-        when(userRepository.findById(Id)).thenReturn(Optional.empty());
-        when(userRepository.save(any())).thenReturn(new User(userName, userMail, userOldPassword));
+        when(userRepository.findByMailAddress(userMail)).thenReturn(Optional.of(new User(userName, userMail, userOldPassword)));
+        when(userRepository.save(any())).thenReturn(new User(userName, userMail, userNewPassword));
 
         User effect = underTest.update(userName, userMail, userNewPassword);
 
