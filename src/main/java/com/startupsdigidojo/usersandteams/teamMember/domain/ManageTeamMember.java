@@ -1,5 +1,6 @@
 package com.startupsdigidojo.usersandteams.teamMember.domain;
 
+import com.startupsdigidojo.usersandteams.startup.domain.Startup;
 import com.startupsdigidojo.usersandteams.user.domain.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -76,15 +77,25 @@ public class ManageTeamMember {
 
         return maybeTeamMember.get();
     }
+    //might need to add here and also in other parts a first control, if the startup itself exists
+    public List<TeamMember> findTeamMembersByStartupId(Long startupId){
+        Optional<List<TeamMember>> maybeTeamMembers = teamMemberRepository.findTeamMembersByStartupId(startupId);
 
-    public TeamMember createTeamMember(User user, String role) {
+        if(maybeTeamMembers.isEmpty()){
+            throw new IllegalArgumentException("No Team Members belonging to startup with Id " + startupId);
+        }
+
+        return maybeTeamMembers.get();
+    }
+
+    public TeamMember createTeamMember(User user, String role, Startup startup) {
         Optional<TeamMember> maybeTeamMember = teamMemberRepository.findByPuserName(user.getName());
 
         if(maybeTeamMember.isPresent()){
             throw new IllegalArgumentException("No Team with User id #" + user.getId() + " present yet");
         }
 
-        return teamMemberRepository.save(new TeamMember(user, role));
+        return teamMemberRepository.save(new TeamMember(user, role, startup));
     }
 
     public void deleteTeamMember(User user) {
@@ -104,18 +115,8 @@ public class ManageTeamMember {
             throw new IllegalArgumentException("No User with id TeamMember #" + id + " present in any Team yet");
         }
 
-        return teamMemberRepository.save(new TeamMember(maybeTeamMember.get().getPuser(), newRole));
+        return teamMemberRepository.save(new TeamMember(maybeTeamMember.get().getPuser(), newRole, maybeTeamMember.get().getStartup()));
     }
-/*
-    public void updateTeamMemberRole(User user, String role){
-        Optional<TeamMember> maybeTeamMember = teamMemberRepository.findByPuserId(user.getId());
 
-        if(maybeTeamMember.isEmpty()){
-            throw new IllegalArgumentException("No User with id #" + user.getId() + " present in any Team yet");
-        }
-
-        teamMemberRepository.save(new TeamMember(user, role));
-    }
-*/
 
 }

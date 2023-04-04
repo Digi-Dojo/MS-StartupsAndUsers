@@ -1,5 +1,6 @@
 package com.startupsdigidojo.usersandteams.teamMember.domain;
 
+import com.startupsdigidojo.usersandteams.startup.domain.Startup;
 import com.startupsdigidojo.usersandteams.user.domain.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -17,6 +18,7 @@ import static org.mockito.Mockito.when;
 public class ManageTeamMemberTest {
     private ManageTeamMember underTest;
     User user;
+    Startup startup;
 
     @Mock
     private TeamMemberRepository teamMemberRepository;
@@ -25,6 +27,7 @@ public class ManageTeamMemberTest {
     void setUp() {
         underTest = new ManageTeamMember(teamMemberRepository);
         user = new User("Pippo", "pippo@unibz.it", "password");
+        startup = new Startup("DigiDojo","Startup for digital services");
     }
 
     @Test
@@ -32,14 +35,15 @@ public class ManageTeamMemberTest {
 
         String role = "Software Developer";
         user.setId(randomPositiveLong());
-        TeamMember teamMember = new TeamMember(user, role);
+        startup.setId(randomPositiveLong());
+        TeamMember teamMember = new TeamMember(user, role, startup);
 
         when(teamMemberRepository.findByPuserName(anyString()))
                 .thenReturn(Optional.empty());
         when(teamMemberRepository.save(any()))
-                .thenReturn(new TeamMember(user, teamMember.getRole()));
+                .thenReturn(new TeamMember(user, teamMember.getRole(), startup));
 
-        TeamMember result = underTest.createTeamMember(user, role);
+        TeamMember result = underTest.createTeamMember(user, role, startup);
 
         assertThat(result).isInstanceOf(TeamMember.class);
         assertThat(result.getPuser().getName()).isEqualTo(user.getName());
@@ -50,29 +54,26 @@ public class ManageTeamMemberTest {
 
     @Test
     public void itThrowsForDuplicationInId() {
-
-        User user = new User("Pippo", "pippo@unibz.it", "password");
         String role = "Software Developer";
         user.setId(randomPositiveLong());
-
+        startup.setId(randomPositiveLong());
         when(teamMemberRepository.findByPuserName(anyString()))
-                .thenReturn(Optional.of(new TeamMember(user, role)));
+                .thenReturn(Optional.of(new TeamMember(user, role, startup)));
 
 
-        assertThatThrownBy(() -> underTest.createTeamMember(user, role))
+        assertThatThrownBy(() -> underTest.createTeamMember(user, role, startup))
                 .isInstanceOf(IllegalArgumentException.class);
     }
 
     @Test
     public void updateTeamMemberRole(){
-        User user = new User("Giamma", "giamma@unibz.it", "pswrd");
         String oldRole = "Assistant";
         String newRole = "Manager";
         Long id = randomPositiveLong();
 
 
-        when(teamMemberRepository.findByPuserName(oldRole)).thenReturn(Optional.of(new TeamMember(id, user, oldRole)));
-        when(teamMemberRepository.save(any())).thenReturn(new TeamMember(id, user, newRole));
+        when(teamMemberRepository.findByPuserName(oldRole)).thenReturn(Optional.of(new TeamMember(id, user, oldRole, startup)));
+        when(teamMemberRepository.save(any())).thenReturn(new TeamMember(id, user, newRole, startup));
 
         TeamMember teamMember = underTest.updateTeamMemberRole(id, oldRole, newRole);
 

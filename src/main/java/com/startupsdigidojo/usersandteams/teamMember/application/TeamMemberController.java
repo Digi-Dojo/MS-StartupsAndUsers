@@ -22,7 +22,7 @@ public class TeamMemberController {
 
     @PostMapping
     public TeamMember createNewTeamMember(@RequestBody CreateTeamMemberDTO dto) {
-        return manageTeamMember.createTeamMember(dto.getUser(), dto.getRole());
+        return manageTeamMember.createTeamMember(dto.getUser(), dto.getRole(), dto.getStartup());
     }
 
     @DeleteMapping(path = "/delete")
