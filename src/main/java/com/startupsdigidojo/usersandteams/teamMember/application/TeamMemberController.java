@@ -22,12 +22,12 @@ public class TeamMemberController {
 
     @PostMapping
     public TeamMember createNewTeamMember(@RequestBody CreateTeamMemberDTO dto) {
-        return manageTeamMember.createTeamMember(dto.getUser(), dto.getRole(), dto.getStartup());
+        return manageTeamMember.createTeamMember(dto.getUserId(), dto.getRole(), dto.getStartupId());
     }
 
-    @DeleteMapping(path = "/delete")
+    /*@DeleteMapping(path = "/delete")
     public void deleteTeamMember(@RequestBody CreateTeamMemberDTO dto) {
-        manageTeamMember.deleteTeamMember(dto.getUser());
-    }
+        manageTeamMember.deleteTeamMember(dto.getUserId());
+    }*/
 
 }

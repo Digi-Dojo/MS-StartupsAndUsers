@@ -4,40 +4,40 @@ import com.startupsdigidojo.usersandteams.user.domain.User;
 
 public class CreateTeamMemberDTO {
 
-    User user;
+    Long userId;
     String role;
-    Startup startup;
+    Long startupId;
 
     public CreateTeamMemberDTO() {
     }
 
-    public CreateTeamMemberDTO(User user, String role, Startup startup) {
-        this.user = user;
+    public CreateTeamMemberDTO(Long userId, String role, Long startupId) {
+        this.userId = userId;
         this.role = role;
-        this.startup = startup;
+        this.startupId = startupId;
     }
 
-    public User getUser() {
-        return user;
+    public Long getUserId() {
+        return userId;
     }
 
     public String getRole() {
         return role;
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public void setUserId(Long userId) {
+        this.userId = userId;
     }
 
     public void setRole(String role) {
         this.role = role;
     }
 
-    public Startup getStartup() {
-        return startup;
+    public Long getStartupId() {
+        return startupId;
     }
 
-    public void setStartup(Startup startup) {
-        this.startup = startup;
+    public void setStartupId(Long startupId) {
+        this.startupId = startupId;
     }
 }

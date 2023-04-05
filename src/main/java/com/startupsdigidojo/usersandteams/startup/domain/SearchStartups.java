@@ -16,7 +16,7 @@ public class SearchStartups {
         this.startupRepository = startupRepository;
     }
 
-    public Startup findOne(Long id){
+    public Startup findById(Long id){
         Optional<Startup> maybeStartup = startupRepository.findById(id);
 
         if(maybeStartup.isEmpty()){

@@ -19,7 +19,7 @@ public class StartupController {
     }
 
     @GetMapping("{id}")
-    public Startup findById(@PathVariable("id") Long id) {return searchStartups.findOne(id);}
+    public Startup findById(@PathVariable("id") Long id) {return searchStartups.findById(id);}
 
     @PostMapping
     public Startup createNewStartup(@RequestBody CreateStartupDTO dto){
@@ -36,7 +36,7 @@ public class StartupController {
         return manageStartups.updateStartupDescription(descriptionDTO.getName(), descriptionDTO.getDescription());
     }
 
-    @PostMapping
+    @DeleteMapping
     public void deleteStartup(@RequestBody DeleteStartupDTO deleteDTO) {
         manageStartups.deleteStartup(deleteDTO.getName());
     }

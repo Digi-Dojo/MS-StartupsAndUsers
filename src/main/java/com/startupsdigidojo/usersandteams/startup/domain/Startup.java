@@ -11,6 +11,9 @@ public class Startup {
     @Column(unique = true)
     private String name;
 
+    private String description;
+
+
     public Startup() {
     }
 
@@ -24,8 +27,6 @@ public class Startup {
         this.name = name;
         this.description = description;
     }
-
-    private String description;
 
     public Long getId() {
         return id;

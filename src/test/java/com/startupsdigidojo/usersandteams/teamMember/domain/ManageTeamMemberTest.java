@@ -1,7 +1,9 @@
 package com.startupsdigidojo.usersandteams.teamMember.domain;
 
 import com.startupsdigidojo.usersandteams.startup.domain.Startup;
+import com.startupsdigidojo.usersandteams.startup.domain.StartupRepository;
 import com.startupsdigidojo.usersandteams.user.domain.User;
+import com.startupsdigidojo.usersandteams.user.domain.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -10,8 +12,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.Optional;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -22,28 +23,37 @@ public class ManageTeamMemberTest {
 
     @Mock
     private TeamMemberRepository teamMemberRepository;
+    @Mock
+    private UserRepository userRepository;
+    @Mock
+    private StartupRepository startupRepository;
 
     @BeforeEach
     void setUp() {
-        underTest = new ManageTeamMember(teamMemberRepository);
+        underTest = new ManageTeamMember(teamMemberRepository, userRepository, startupRepository);
         user = new User("Pippo", "pippo@unibz.it", "password");
+        user.setId(randomPositiveLong());
         startup = new Startup("DigiDojo","Startup for digital services");
+        startup.setId(randomPositiveLong());
+
     }
 
     @Test
     public void itCreatesATeamMember() {
-
         String role = "Software Developer";
-        user.setId(randomPositiveLong());
-        startup.setId(randomPositiveLong());
+
         TeamMember teamMember = new TeamMember(user, role, startup);
 
-        when(teamMemberRepository.findByPuserName(anyString()))
+        when(teamMemberRepository.findByPuserIdAndStartupId(user.getId(), startup.getId()))
                 .thenReturn(Optional.empty());
         when(teamMemberRepository.save(any()))
                 .thenReturn(new TeamMember(user, teamMember.getRole(), startup));
 
-        TeamMember result = underTest.createTeamMember(user, role, startup);
+        when(userRepository.findById(user.getId()))
+                .thenReturn(Optional.of(user));
+        when(startupRepository.findById(startup.getId()))
+                .thenReturn(Optional.of(startup));
+        TeamMember result = underTest.createTeamMember(user.getId(), role, startup.getId());
 
         assertThat(result).isInstanceOf(TeamMember.class);
         assertThat(result.getPuser().getName()).isEqualTo(user.getName());
@@ -55,13 +65,15 @@ public class ManageTeamMemberTest {
     @Test
     public void itThrowsForDuplicationInId() {
         String role = "Software Developer";
-        user.setId(randomPositiveLong());
-        startup.setId(randomPositiveLong());
-        when(teamMemberRepository.findByPuserName(anyString()))
+        when(userRepository.findById(user.getId()))
+                .thenReturn(Optional.of(user));
+        when(startupRepository.findById(startup.getId()))
+                .thenReturn(Optional.of(startup));
+        when(teamMemberRepository.findByPuserIdAndStartupId(anyLong(),anyLong()))
                 .thenReturn(Optional.of(new TeamMember(user, role, startup)));
 
 
-        assertThatThrownBy(() -> underTest.createTeamMember(user, role, startup))
+        assertThatThrownBy(() -> underTest.createTeamMember(user.getId(), role, startup.getId()))
                 .isInstanceOf(IllegalArgumentException.class);
     }
 
@@ -72,10 +84,10 @@ public class ManageTeamMemberTest {
         Long id = randomPositiveLong();
 
 
-        when(teamMemberRepository.findByPuserName(oldRole)).thenReturn(Optional.of(new TeamMember(id, user, oldRole, startup)));
+        when(teamMemberRepository.findById(id)).thenReturn(Optional.of(new TeamMember(id, user, oldRole, startup)));
         when(teamMemberRepository.save(any())).thenReturn(new TeamMember(id, user, newRole, startup));
 
-        TeamMember teamMember = underTest.updateTeamMemberRole(id, oldRole, newRole);
+        TeamMember teamMember = underTest.updateTeamMemberRole(id, newRole);
 
         assertThat(teamMember.getRole()).isEqualTo(newRole);
     }

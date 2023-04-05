@@ -32,7 +32,7 @@ public class SearchStartupsTest {
         when(startupRepository.findById(anyLong()))
                 .thenReturn(Optional.of(new Startup(id,name,description)));
 
-        Startup result = underTest.findOne(id);
+        Startup result = underTest.findById(id);
 
         assertThat(result)
                 .isInstanceOf(Startup.class);
@@ -48,7 +48,7 @@ public class SearchStartupsTest {
     public void findOneThrowsForNotExistingStartup(){
         when(startupRepository.findById(anyLong()))
                 .thenReturn(Optional.empty());
-        assertThatThrownBy(() -> underTest.findOne(randomPositiveLong()))
+        assertThatThrownBy(() -> underTest.findById(randomPositiveLong()))
                 .isInstanceOf(IllegalArgumentException.class);
     }
 
