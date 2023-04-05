@@ -25,4 +25,19 @@ public class StartupController {
     public Startup createNewStartup(@RequestBody CreateStartupDTO dto){
         return manageStartups.createStartup(dto.getName(), dto.getDescription());
     }
+
+    @PostMapping
+    public Startup updateStartupName(@RequestBody UpdateStartupNameDTO nameDTO) {
+        return manageStartups.updateStartupName(nameDTO.getOldName(), nameDTO.getNewName());
+    }
+
+    @PostMapping
+    public Startup updateStartupDescription(@RequestBody UpdateStartupDescriptionDTO descriptionDTO) {
+        return manageStartups.updateStartupDescription(descriptionDTO.getName(), descriptionDTO.getDescription());
+    }
+
+    @PostMapping
+    public void deleteStartup(@RequestBody DeleteStartupDTO deleteDTO) {
+        manageStartups.deleteStartup(deleteDTO.getName());
+    }
 }
