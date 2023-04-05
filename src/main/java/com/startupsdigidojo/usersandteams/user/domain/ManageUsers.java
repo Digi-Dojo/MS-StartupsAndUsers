@@ -28,7 +28,7 @@ public class ManageUsers {
     public boolean deleteUser(String name, String mailAddress, String password){
         Optional<User> maybeUser = userRepository.findByMailAddress(mailAddress);
 
-        if(!maybeUser.isPresent()){
+        if(maybeUser.isEmpty()){
             throw new IllegalArgumentException("User doesn't exist");
         }
 
@@ -40,7 +40,7 @@ public class ManageUsers {
     public User update(String name, String mailAddress, String password){
         Optional<User> maybeUser = userRepository.findByMailAddress(mailAddress);
 
-        if(!maybeUser.isPresent()){
+        if(maybeUser.isEmpty()){
             throw new IllegalArgumentException("The user doesn't exist");
         }
 

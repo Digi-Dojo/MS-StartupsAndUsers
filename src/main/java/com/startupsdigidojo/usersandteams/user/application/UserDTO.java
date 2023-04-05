@@ -1,5 +1,7 @@
 package com.startupsdigidojo.usersandteams.user.application;
 
+import com.startupsdigidojo.usersandteams.user.domain.User;
+
 public class UserDTO {
 
     String name;
@@ -21,7 +23,7 @@ public class UserDTO {
     }
 
     public void setPassword(String password) {
-        this.password = password;
+        this.password = User.hashPassword(password);
     }
 
     public String getMailAddres() {
@@ -35,7 +37,7 @@ public class UserDTO {
 
     public UserDTO(String name, String password, String mailAddres) {
         this.name = name;
-        this.password = password;
+        this.password = User.hashPassword(password);
         this.mailAddres = mailAddres;
     }
 }
