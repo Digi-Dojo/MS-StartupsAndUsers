@@ -25,17 +25,17 @@ public class UserController {
 
     @PostMapping(path = "/create")
     public User createNewUser(@RequestBody UserDTO dto) {
-        return manageUsers.createUser(dto.getName(), dto.getMailAddres(), dto.getPassword());
+        return manageUsers.createUser(dto.getName(), dto.getMailAddress(), dto.getPassword());
     }
 
     @PostMapping(path = "/update")
     public User updateUser(@RequestBody UserDTO dto) {
-        return manageUsers.update(dto.getName(), dto.getMailAddres(), dto.getPassword());
+        return manageUsers.update(dto.getName(), dto.getMailAddress(), dto.getPassword());
     }
 
     @DeleteMapping(path = "/delete")
     public boolean deleteUser(@RequestBody UserDTO dto) {
-        return manageUsers.deleteUser(dto.getName(), dto.getMailAddres(), dto.getPassword());
+        return manageUsers.deleteUser(dto.getName(), dto.getMailAddress(), dto.getPassword());
     }
 
 }

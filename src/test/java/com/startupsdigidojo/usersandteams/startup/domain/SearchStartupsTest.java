@@ -25,7 +25,7 @@ public class SearchStartupsTest {
     void setUp() {underTest = new SearchStartups(startupRepository);}
 
     @Test
-    public void itFindsAnExistingStartup(){
+    public void findByIdReturnsStartupWithMatchingId(){
         Long id = randomPositiveLong();
         String name = "name";
         String description = "description";
@@ -45,7 +45,7 @@ public class SearchStartupsTest {
     }
 
     @Test
-    public void findOneThrowsForNotExistingStartup(){
+    public void findByIdThrowsForNotExistingStartup(){
         when(startupRepository.findById(anyLong()))
                 .thenReturn(Optional.empty());
         assertThatThrownBy(() -> underTest.findById(randomPositiveLong()))
@@ -73,6 +73,34 @@ public class SearchStartupsTest {
         when(startupRepository.findAll())
                 .thenReturn(new ArrayList<Startup>());
         assertThatThrownBy(() -> underTest.findAll())
+                .isInstanceOf(IllegalArgumentException.class);
+    }
+
+    @Test
+    public void findByNameReturnsStartupWithMatchingName(){
+        Long id = randomPositiveLong();
+        String name = "name";
+        String description = "description";
+        when(startupRepository.findByName(name))
+                .thenReturn(Optional.of(new Startup(id,name,description)));
+
+        Startup result = underTest.findByName(name);
+
+        assertThat(result)
+                .isInstanceOf(Startup.class);
+        assertThat(result.getId())
+                .isEqualTo(id);
+        assertThat(result.getName())
+                .isEqualTo(name);
+        assertThat(result.getDescription())
+                .isEqualTo(description);
+    }
+
+    @Test
+    public void findByNameThrowsForNotExistingStartup(){
+        when(startupRepository.findByName(anyString()))
+                .thenReturn(Optional.empty());
+        assertThatThrownBy(() -> underTest.findByName(anyString()))
                 .isInstanceOf(IllegalArgumentException.class);
     }
 

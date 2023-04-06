@@ -4,11 +4,11 @@ import jakarta.persistence.*;
 
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
+import java.nio.charset.StandardCharsets;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.KeySpec;
-import java.util.Arrays;
 
 @Entity
 public class User {
@@ -71,7 +71,7 @@ public class User {
         byte[] salt = new byte[16];
         rand.nextBytes(salt);
         KeySpec spec = new PBEKeySpec(password.toCharArray(), salt, 50000, 128);
-        SecretKeyFactory factory = null;
+        SecretKeyFactory factory;
         byte[] hash;
         try {
             factory = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA1");
@@ -79,7 +79,7 @@ public class User {
         } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
             throw new RuntimeException(e);
         }
-        return Arrays.toString(hash);
+        return new String(hash, StandardCharsets.UTF_8);
     }
 
 }

@@ -8,7 +8,7 @@ public class UserDTO {
 
     String password;
 
-    String mailAddres;
+    String mailAddress;
 
     public String getName() {
         return name;
@@ -26,18 +26,18 @@ public class UserDTO {
         this.password = User.hashPassword(password);
     }
 
-    public String getMailAddres() {
-        return mailAddres;
+    public String getMailAddress() {
+        return mailAddress;
     }
 
-    public void setMailAddres(String mailAddres) {
-        this.mailAddres = mailAddres;
+    public void setMailAddress(String mailAddress) {
+        this.mailAddress = mailAddress;
     }
 
 
-    public UserDTO(String name, String password, String mailAddres) {
+    public UserDTO(String name, String password, String mailAddress) {
         this.name = name;
         this.password = User.hashPassword(password);
-        this.mailAddres = mailAddres;
+        this.mailAddress = mailAddress;
     }
 }

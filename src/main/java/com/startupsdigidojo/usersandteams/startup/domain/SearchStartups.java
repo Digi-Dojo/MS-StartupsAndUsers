@@ -33,4 +33,15 @@ public class SearchStartups {
         }
         return list;
     }
+
+    public Startup findByName(String name){
+        Optional<Startup> maybeStartup = startupRepository.findByName(name);
+
+        if(maybeStartup.isEmpty()){
+            throw new IllegalArgumentException("Startup with name " + name + " does not exist");
+        }
+
+        return maybeStartup.get();
+    }
+
 }
