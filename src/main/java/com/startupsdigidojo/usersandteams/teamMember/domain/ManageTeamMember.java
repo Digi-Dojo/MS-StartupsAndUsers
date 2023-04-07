@@ -64,7 +64,6 @@ public class ManageTeamMember {
         return maybeExistRole.get();
     }
 
-    //might need to add here and also in other parts a first control, if the startup itself exists
     public List<TeamMember> findTeamMembersByStartupId(Long startupId){
         searchStartups.findById(startupId);
         Optional<List<TeamMember>> maybeTeamMembers = teamMemberRepository.findTeamMembersByStartupId(startupId);
@@ -75,19 +74,6 @@ public class ManageTeamMember {
 
         return maybeTeamMembers.get();
     }
-
-    /*public TeamMember createTeamMember(User user, String role, Startup startup) {
-        searchUsers.findById(user.getId());
-        searchStartups.findById(startup.getId());
-        Optional<TeamMember> maybeTeamMember = teamMemberRepository.findByPuserIdAndStartupId(user.getId(), startup.getId());
-
-        if(maybeTeamMember.isPresent()){
-            throw new IllegalArgumentException("A Team Member with User id #" + user.getId() + " and Startup id # "
-                    + startup.getId() + " is already present");
-        }
-
-        return teamMemberRepository.save(new TeamMember(user, role, startup));
-    }*/
 
     public TeamMember createTeamMember(Long userId, String role, Long startupId){
         User user = searchUsers.findById(userId);

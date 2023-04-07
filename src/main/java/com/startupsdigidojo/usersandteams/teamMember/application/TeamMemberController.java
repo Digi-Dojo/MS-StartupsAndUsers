@@ -27,7 +27,7 @@ public class TeamMemberController {
 
     @DeleteMapping(path = "/delete")
     public void deleteTeamMember(@RequestBody DeleteTeamMemberDTO dto) {
-        manageTeamMember.deleteTeamMember(dto.getUserId());
+        manageTeamMember.deleteTeamMember(dto.getId());
     }
 
 }
