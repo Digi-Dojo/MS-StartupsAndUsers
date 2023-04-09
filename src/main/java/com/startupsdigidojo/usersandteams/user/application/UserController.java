@@ -23,17 +23,17 @@ public class UserController {
         return searchUsers.findByMailAddress(mailAddresses);
     }
 
-    @PostMapping(path = "/create")
+    @PostMapping( "/create")
     public User createNewUser(@RequestBody UserDTO dto) {
         return manageUsers.createUser(dto.getName(), dto.getMailAddress(), dto.getPassword());
     }
 
-    @PostMapping(path = "/update")
+    @PostMapping( "/update")
     public User updateUser(@RequestBody UserDTO dto) {
         return manageUsers.update(dto.getName(), dto.getMailAddress(), dto.getPassword());
     }
 
-    @DeleteMapping(path = "/delete")
+    @DeleteMapping( "/delete")
     public boolean deleteUser(@RequestBody UserDTO dto) {
         return manageUsers.deleteUser(dto.getName(), dto.getMailAddress(), dto.getPassword());
     }

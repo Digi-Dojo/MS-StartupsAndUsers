@@ -15,17 +15,17 @@ public class TeamMemberController {
         this.manageTeamMember = manageTeamMember;
     }
 
-    @GetMapping("{id}")
+    @GetMapping("/{id}")
     public TeamMember findById(@PathVariable("id") Long id) {
         return manageTeamMember.findByTeamMemberId(id);
     }
 
-    @PostMapping
+    @PostMapping("/create")
     public TeamMember createNewTeamMember(@RequestBody CreateTeamMemberDTO dto) {
         return manageTeamMember.createTeamMember(dto.getUserId(), dto.getRole(), dto.getStartupId());
     }
 
-    @DeleteMapping(path = "/delete")
+    @DeleteMapping( "/delete")
     public void deleteTeamMember(@RequestBody DeleteTeamMemberDTO dto) {
         manageTeamMember.deleteTeamMember(dto.getId());
     }
