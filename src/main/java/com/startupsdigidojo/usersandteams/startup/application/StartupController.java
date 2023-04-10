@@ -9,8 +9,8 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping(path = "/v1/startup")
 public class StartupController {
-    private ManageStartups manageStartups;
-    private SearchStartups searchStartups;
+    private final ManageStartups manageStartups;
+    private final SearchStartups searchStartups;
 
     @Autowired
     public StartupController(ManageStartups manageStartups, SearchStartups searchStartups){

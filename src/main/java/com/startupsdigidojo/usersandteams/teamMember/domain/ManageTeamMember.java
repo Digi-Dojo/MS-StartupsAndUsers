@@ -15,9 +15,9 @@ import java.util.Optional;
 
 @Service
 public class ManageTeamMember {
-    private TeamMemberRepository teamMemberRepository;
-    private SearchUsers searchUsers;
-    private SearchStartups searchStartups;
+    private final TeamMemberRepository teamMemberRepository;
+    private final SearchUsers searchUsers;
+    private final SearchStartups searchStartups;
 
 
     @Autowired

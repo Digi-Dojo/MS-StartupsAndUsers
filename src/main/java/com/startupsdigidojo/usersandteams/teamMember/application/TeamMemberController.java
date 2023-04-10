@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping(path = "/v1/teammembers")
 public class TeamMemberController {
-    private ManageTeamMember manageTeamMember;
+    private final ManageTeamMember manageTeamMember;
 
     @Autowired
     public TeamMemberController(ManageTeamMember manageTeamMember) {

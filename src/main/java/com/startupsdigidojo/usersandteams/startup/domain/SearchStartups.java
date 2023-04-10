@@ -9,7 +9,7 @@ import java.util.Optional;
 @Service
 public class SearchStartups {
 
-    private StartupRepository startupRepository;
+    private final StartupRepository startupRepository;
 
     @Autowired
     public SearchStartups(StartupRepository startupRepository) {

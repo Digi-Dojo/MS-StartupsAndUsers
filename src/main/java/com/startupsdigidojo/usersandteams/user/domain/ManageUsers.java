@@ -8,7 +8,7 @@ import java.util.Optional;
 @Service
 public class ManageUsers {
 
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
 
     @Autowired
     public ManageUsers(UserRepository userRepository){

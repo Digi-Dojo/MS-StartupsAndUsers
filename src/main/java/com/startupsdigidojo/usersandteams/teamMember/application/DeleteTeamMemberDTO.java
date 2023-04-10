@@ -2,7 +2,7 @@ package com.startupsdigidojo.usersandteams.teamMember.application;
 
 public class DeleteTeamMemberDTO {
 
-    private Long id;
+    private final Long id;
 
     DeleteTeamMemberDTO(Long id) {
         this.id = id;

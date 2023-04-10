@@ -7,7 +7,7 @@ import java.util.Optional;
 
 @Service
 public class SearchUsers {
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
 
     @Autowired
     public SearchUsers(UserRepository userRepository){

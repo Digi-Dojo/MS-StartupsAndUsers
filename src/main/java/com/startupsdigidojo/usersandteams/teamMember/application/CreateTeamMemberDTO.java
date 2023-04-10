@@ -1,6 +1,4 @@
 package com.startupsdigidojo.usersandteams.teamMember.application;
-import com.startupsdigidojo.usersandteams.startup.domain.Startup;
-import com.startupsdigidojo.usersandteams.user.domain.User;
 
 public class CreateTeamMemberDTO {
 

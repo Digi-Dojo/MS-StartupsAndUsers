@@ -8,7 +8,7 @@ import java.util.Optional;
 @Service
 public class ManageStartups {
 
-    private StartupRepository startupRepository;
+    private final StartupRepository startupRepository;
 
     @Autowired
     public ManageStartups(StartupRepository startupRepository) {
