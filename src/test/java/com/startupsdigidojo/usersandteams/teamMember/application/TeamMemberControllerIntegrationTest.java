@@ -1,5 +1,4 @@
-package com.startupsdigidojo.usersandteams.user.application;
-
+package com.startupsdigidojo.usersandteams.teamMember.application;
 import jakarta.servlet.ServletContext;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -19,7 +18,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @SpringBootTest
-public class UserControllerIntegrationTest {
+public class TeamMemberControllerIntegrationTest {
     @Autowired
     private WebApplicationContext webApplicationContext;
     private MockMvc mockMvc;
@@ -27,28 +26,21 @@ public class UserControllerIntegrationTest {
     public void setup() {
         this.mockMvc = MockMvcBuilders.webAppContextSetup(this.webApplicationContext).build();
     }
+
     @Test
-    public void givenWac_whenServletContext_thenItProvidesUserController() {
+    public void givenWac_whenServletContext_thenItProvidesStartupController() {
         ServletContext servletContext = webApplicationContext.getServletContext();
         assertNotNull(servletContext);
         assertTrue(servletContext instanceof MockServletContext);
-        assertNotNull(webApplicationContext.getBean("userController"));
+        assertNotNull(webApplicationContext.getBean("teamMemberController"));
     }
 
     @Test
-    public void getMappingWithEmailReturnsUserWithIndicatedEmail() throws Exception {
-        mockMvc.perform(get("/v1/users/matteo.larcer@gmail.com")).andDo(print())
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.mailAddress").value("matteo.larcer@gmail.com"));
-    }
-
-    @Test
-    public void postMappingCreatesUser() throws Exception {
-        mockMvc.perform(post("/v1/users/create")
+    public void postMappingCreatesTeamMember() throws Exception {
+        mockMvc.perform(post("/v1/teammembers/create")
                 .contentType("application/json")
-                .content("{\"name\":\"Ernald\",\"mailAddress\":\"enrami@unibz.org\",\"password\":\"passwordErnald\"}"))
+                .content("{\"userId\":\"1\",\"role\":\"developer\",\"startupId\":\"2\" }"))
                 .andDo(print())
                 .andExpect(status().isOk());
     }
 }
-
