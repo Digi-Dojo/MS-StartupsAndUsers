@@ -19,6 +19,9 @@ public class User {
     public User(String name, String mailAddress, String password){
         this.name = name;
         this.mailAddress = mailAddress;
+        SecureRandom rand = new SecureRandom();
+        salt = new byte[16];
+        rand.nextBytes(salt);
         this.password = hashPassword(password);
     }
 
@@ -30,6 +33,8 @@ public class User {
 
     @Column(unique = true)
     private String mailAddress;
+
+    private byte[] salt;
 
     //Todo: maybe hash it or something first to improve security
 
@@ -66,10 +71,7 @@ public class User {
         this.password = hashPassword(password);
     }
 
-    public static String hashPassword(String password){
-        SecureRandom rand = new SecureRandom();
-        byte[] salt = new byte[16];
-        rand.nextBytes(salt);
+    public String hashPassword(String password){
         KeySpec spec = new PBEKeySpec(password.toCharArray(), salt, 50000, 128);
         SecretKeyFactory factory;
         byte[] hash;

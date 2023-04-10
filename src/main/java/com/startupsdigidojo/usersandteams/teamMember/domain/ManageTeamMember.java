@@ -16,9 +16,7 @@ import java.util.Optional;
 @Service
 public class ManageTeamMember {
     private TeamMemberRepository teamMemberRepository;
-    private UserRepository userRepository;
     private SearchUsers searchUsers;
-    private StartupRepository startupRepository;
     private SearchStartups searchStartups;
 
 
@@ -26,8 +24,6 @@ public class ManageTeamMember {
     public ManageTeamMember(TeamMemberRepository teamMemberRepository, UserRepository userRepository,
                             StartupRepository startupRepository){
         this.teamMemberRepository = teamMemberRepository;
-        this.userRepository = userRepository;
-        this.startupRepository = startupRepository;
         searchUsers = new SearchUsers(userRepository);
         searchStartups = new SearchStartups(startupRepository);
     }
