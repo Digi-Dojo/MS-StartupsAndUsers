@@ -18,25 +18,25 @@ public class StartupController {
         this.searchStartups = searchStartups;
     }
 
-    @GetMapping("{id}")
+    @GetMapping("/{id}")
     public Startup findById(@PathVariable("id") Long id) {return searchStartups.findById(id);}
 
-    @PostMapping
+    @PostMapping("/create")
     public Startup createNewStartup(@RequestBody CreateStartupDTO dto){
         return manageStartups.createStartup(dto.getName(), dto.getDescription());
     }
 
-    @PostMapping
+    @PostMapping("/updateName")
     public Startup updateStartupName(@RequestBody UpdateStartupNameDTO nameDTO) {
         return manageStartups.updateStartupName(nameDTO.getOldName(), nameDTO.getNewName());
     }
 
-    @PostMapping
+    @PostMapping("/updateDescription")
     public Startup updateStartupDescription(@RequestBody UpdateStartupDescriptionDTO descriptionDTO) {
         return manageStartups.updateStartupDescription(descriptionDTO.getName(), descriptionDTO.getDescription());
     }
 
-    @DeleteMapping
+    @DeleteMapping("/delete")
     public void deleteStartup(@RequestBody DeleteStartupDTO deleteDTO) {
         manageStartups.deleteStartup(deleteDTO.getName());
     }
