@@ -9,8 +9,7 @@ import com.startupsdigidojo.usersandteams.user.domain.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 
 @Service
@@ -69,6 +68,19 @@ public class ManageTeamMember {
         }
 
         return maybeTeamMembers.get();
+    }
+
+    public List<User> findUsersByStartupId(Long startupId){
+        List<TeamMember> teamMembers = findTeamMembersByStartupId(startupId);
+        List<User> users = new ArrayList<>();
+        Set<Long> userIds = new HashSet<>();
+        for(TeamMember t : teamMembers){
+            userIds.add(t.getPuser().getId());
+        }
+        for(Long id : userIds){
+            users.add(searchUsers.findById(id));
+        }
+        return users;
     }
 
     public TeamMember createTeamMember(Long userId, String role, Long startupId){
