@@ -23,7 +23,7 @@ public class TeamMemberController {
         return manageTeamMember.findByTeamMemberId(id);
     }
 
-    @GetMapping("/{startupId}")
+    @GetMapping("/startup/{startupId}")
     public List<User> findUsersByStartupId(@PathVariable("startupId") Long startupId) {return manageTeamMember.findUsersByStartupId(startupId);}
 
     @PostMapping("/create")

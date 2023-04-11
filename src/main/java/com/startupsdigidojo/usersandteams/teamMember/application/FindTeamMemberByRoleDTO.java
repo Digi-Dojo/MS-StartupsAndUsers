@@ -4,6 +4,9 @@ public class FindTeamMemberByRoleDTO {
 
     private String role;
 
+    public FindTeamMemberByRoleDTO() {
+    }
+
     public FindTeamMemberByRoleDTO(String role) {
         this.role = role;
     }

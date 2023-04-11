@@ -12,8 +12,7 @@ import org.springframework.web.context.WebApplicationContext;
 import static org.junit.jupiter.api.Assertions.*;
 
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -39,7 +38,23 @@ public class TeamMemberControllerIntegrationTest {
     public void postMappingCreatesTeamMember() throws Exception {
         mockMvc.perform(post("/v1/teammembers/create")
                 .contentType("application/json")
-                .content("{\"userId\":\"1\",\"role\":\"developer\",\"startupId\":\"2\" }"))
+                .content("{\"userId\":\"2\",\"role\":\"designer\",\"startupId\":\"2\" }"))
+                .andDo(print())
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    public void getMappingWithStartupIdReturnsUsersList() throws Exception{
+        mockMvc.perform(get("/v1/teammembers/startup/{startupId}", "2"))
+                .andDo(print())
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    public void deleteMappingShouldDeleteTeamMember() throws Exception{
+        mockMvc.perform(delete("/v1/teammembers/delete")
+                .contentType("application/json")
+                .content("{\"id\":\"3\"}"))
                 .andDo(print())
                 .andExpect(status().isOk());
     }
