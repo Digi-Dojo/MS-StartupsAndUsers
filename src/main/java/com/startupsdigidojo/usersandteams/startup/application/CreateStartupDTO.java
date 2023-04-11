@@ -2,8 +2,6 @@ package com.startupsdigidojo.usersandteams.startup.application;
 
 public class CreateStartupDTO {
     private String name;
-    /*private String newName;
-    private String oldName;*/
     private String description;
 
     public CreateStartupDTO() {
@@ -29,14 +27,5 @@ public class CreateStartupDTO {
     public void setDescription(String description) {
         this.description = description;
     }
-
-    /*public String getNewName(){return newName;}
-
-    public void setNewName(String newName) {this.newName = newName;}
-
-    public String getOldName() {return oldName;}
-
-    public void setOldName(String oldName) {this.oldName = oldName;}*/
-
 
 }
