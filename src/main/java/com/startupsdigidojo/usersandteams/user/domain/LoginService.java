@@ -31,9 +31,12 @@ public class LoginService {
         return hexString.toString();
     }
 
-    public boolean verifyPassword(String enteredPassword, String storedPassword) {
-        String hashedEnteredPassword = hashPassword(enteredPassword);
-        return hashedEnteredPassword.equals(storedPassword);
-    }
 
+    public User verifyPassword(User user, String enteredPassword) {
+        String hashedEnteredPassword = hashPassword(enteredPassword);
+        if(!hashedEnteredPassword.equals(user.getPassword())){
+            throw new IllegalArgumentException("Wrong password for this user");
+        }
+        return user;
+    }
 }
