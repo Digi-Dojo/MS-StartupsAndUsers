@@ -6,6 +6,8 @@ import com.startupsdigidojo.usersandteams.startup.domain.Startup;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping(path = "/v1/startup")
 public class StartupController {
@@ -34,6 +36,11 @@ public class StartupController {
     @PostMapping("/updateDescription")
     public Startup updateStartupDescription(@RequestBody UpdateStartupDescriptionDTO descriptionDTO) {
         return manageStartups.updateStartupDescription(descriptionDTO.getName(), descriptionDTO.getDescription());
+    }
+
+    @GetMapping("/getAll")
+    public List<Startup> findAll(){
+        return searchStartups.findAll();
     }
 
     @DeleteMapping("/delete")

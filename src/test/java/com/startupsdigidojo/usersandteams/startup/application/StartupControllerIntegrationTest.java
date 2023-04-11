@@ -43,4 +43,11 @@ public class StartupControllerIntegrationTest {
                 .andDo(print())
                 .andExpect(status().isOk());
     }
+
+    @Test
+    public void getMappingGetAllShouldReturnAllStartups() throws Exception{
+        mockMvc.perform(get("/v1/startup/getAll"))
+                .andDo(print())
+                .andExpect(status().isOk());
+    }
 }
