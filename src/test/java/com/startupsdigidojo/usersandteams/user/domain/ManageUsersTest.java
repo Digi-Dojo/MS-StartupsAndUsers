@@ -10,7 +10,6 @@ import java.util.Optional;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.when;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -56,50 +55,16 @@ public class ManageUsersTest {
     }
 
     @Test
-    public void UpdateUpdatesTheName() {
-
-        String userOldName = "OldUser";
-        String userNewName = "NewUser";
-        String userMail = "TestUser@testmail.com";
-        String userPassword = "testPassword";
-
-        when(userRepository.findByMailAddress(userMail)).thenReturn(Optional.of(new User(userOldName, userMail, userPassword)));
-        when(userRepository.save(any())).thenReturn(new User(userNewName, userMail, userPassword));
-
-        User effect = underTest.update(userNewName, userMail, userPassword);
-
-        assertThat(effect.getName()).isEqualTo(userNewName);
-    }
-
-    @Test
-    public void UpdateMailAddressUpdatesTheMailAddress() {
-
-        String userName = "testUser";
-        String userOldMail = "OldMail@testmail.com";
-        String userNewMail = "NewMail@testmail.com";
-        String userPassword = "testPassword";
-
-        lenient().when(userRepository.findByMailAddress(userOldMail)).thenReturn(Optional.of(new User(userName, userOldMail, userPassword)));
-        lenient().when(userRepository.save(any())).thenReturn(new User(userName, userNewMail, userPassword));
-
-        User effect = underTest.updateUserMail(userOldMail, userNewMail);
-
-        assertThat(effect.getMailAddress()).isEqualTo(userNewMail);
-    }
-
-    @Test
-    public void UpdateUpdatesThePassword() {
-
+    public void UpdatePassword() {
         String userName = "testUser";
         String userMail = "TestUser@testmail.com";
         String userOldPassword = "testPassword";
         String userNewPassword = "NewPassword";
+        User u = new User(userName, userMail, userOldPassword);
+        u.setPassword(userNewPassword);
+        when(userRepository.save(u)).thenReturn(u);
 
-        when(userRepository.findByMailAddress(userMail)).thenReturn(Optional.of(new User(userName, userMail, userOldPassword)));
-        when(userRepository.save(any())).thenReturn(new User(userName, userMail, userNewPassword));
-
-        User effect = underTest.update(userName, userMail, userNewPassword);
-
+        User effect = underTest.updatePassword(u, userNewPassword);
         assertThat(effect.getPassword()).isEqualTo(userNewPassword);
     }
 
@@ -108,10 +73,12 @@ public class ManageUsersTest {
 
         String userName = "testUser";
         String userMail = "TestUser@testmail.com";
-        String userPassword = "testPassword";
+        String userOldPassword = "testPassword";
+        String userNewPassword = "NewPassword";
 
-        when(userRepository.findByMailAddress(anyString())).thenReturn(Optional.empty());
-        assertThatThrownBy(() -> underTest.update(userName, userMail, userPassword)).isInstanceOf(IllegalArgumentException.class);
+        User u = new User(userName, userMail, userOldPassword);
+        when(userRepository.save(u)).thenThrow(new IllegalArgumentException());
+        assertThatThrownBy(() -> underTest.updatePassword(u, userNewPassword)).isInstanceOf(IllegalArgumentException.class);
     }
 
     @Test
