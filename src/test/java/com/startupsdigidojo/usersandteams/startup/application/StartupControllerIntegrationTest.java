@@ -12,8 +12,7 @@ import org.springframework.web.context.WebApplicationContext;
 import static org.junit.jupiter.api.Assertions.*;
 
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -39,7 +38,16 @@ public class StartupControllerIntegrationTest {
     public void postMappingCreatesStartup() throws Exception {
         mockMvc.perform(post("/v1/startup/create")
                 .contentType("application/json")
-                .content("{\"name\":\"DigiDojo\",\"description\":\"a fun way to create startups\"}"))
+                .content("{\"name\":\"DigiDojo3\",\"description\":\"a very fun way to create startups\"}"))
+                .andDo(print())
+                .andExpect(status().isOk());
+        mockMvc.perform(get("/v1/startup/5"))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.name").value("DigiDojo3"));
+        mockMvc.perform(delete("/v1/startup/delete")
+                        .contentType("application/json")
+                        .content("{\"name\":\"DigiDojo3\",\"description\":\"a very fun way to create startups\"}"))
                 .andDo(print())
                 .andExpect(status().isOk());
     }

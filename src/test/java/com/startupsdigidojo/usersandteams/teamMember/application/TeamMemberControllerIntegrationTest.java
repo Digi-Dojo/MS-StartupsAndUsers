@@ -38,7 +38,16 @@ public class TeamMemberControllerIntegrationTest {
     public void postMappingCreatesTeamMember() throws Exception {
         mockMvc.perform(post("/v1/teammembers/create")
                 .contentType("application/json")
-                .content("{\"userId\":\"2\",\"role\":\"designer\",\"startupId\":\"2\" }"))
+                .content("{\"userId\":\"3\",\"role\":\"designer\",\"startupId\":\"2\" }"))
+                .andDo(print())
+                .andExpect(status().isOk());
+        mockMvc.perform(get("/v1/teammembers/1"))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.Id").value("1"));
+        mockMvc.perform(delete("/v1/users/delete")
+                        .contentType("application/json")
+                        .content("{\"userId\":\"3\",\"role\":\"designer\",\"startupId\":\"2\" }"))
                 .andDo(print())
                 .andExpect(status().isOk());
     }
