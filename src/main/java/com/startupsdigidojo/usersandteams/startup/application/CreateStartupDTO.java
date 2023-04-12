@@ -7,10 +7,10 @@ public class CreateStartupDTO {
     public CreateStartupDTO() {
     }
 
-    public CreateStartupDTO(String name, String description) {
+    /*public CreateStartupDTO(String name, String description) {
         this.name = name;
         this.description = description;
-    }
+    }*/
 
     public String getName() {
         return name;
