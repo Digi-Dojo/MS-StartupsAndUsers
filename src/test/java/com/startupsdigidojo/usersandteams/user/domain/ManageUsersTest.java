@@ -89,7 +89,7 @@ public class ManageUsersTest {
         String userPassword = "testPassword";
 
         when(userRepository.findByMailAddress(anyString())).thenReturn(Optional.empty());
-        assertThatThrownBy(() -> underTest.deleteUser(userName, userMail, userPassword)).isInstanceOf(IllegalArgumentException.class);
+        assertThatThrownBy(() -> underTest.deleteUser(userMail)).isInstanceOf(IllegalArgumentException.class);
     }
 
     @Test

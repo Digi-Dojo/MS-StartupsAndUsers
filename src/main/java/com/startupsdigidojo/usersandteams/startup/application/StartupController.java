@@ -23,6 +23,9 @@ public class StartupController {
     @GetMapping("/{id}")
     public Startup findById(@PathVariable("id") Long id) {return searchStartups.findById(id);}
 
+    @GetMapping("/name/{name}")
+    public Startup findByName(@PathVariable("name") String name) {return searchStartups.findByName(name);}
+
     @PostMapping("/create")
     public Startup createNewStartup(@RequestBody CreateStartupDTO dto){
         return manageStartups.createStartup(dto.getName(), dto.getDescription());

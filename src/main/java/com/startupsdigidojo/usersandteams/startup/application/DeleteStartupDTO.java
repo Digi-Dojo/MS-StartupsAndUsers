@@ -2,7 +2,9 @@ package com.startupsdigidojo.usersandteams.startup.application;
 
 public class DeleteStartupDTO {
 
-    private final String name;
+    private String name;
+
+    public DeleteStartupDTO() {}
 
     public DeleteStartupDTO(String name) {
         this.name = name;
@@ -12,5 +14,7 @@ public class DeleteStartupDTO {
         return name;
     }
 
-
+    public void setName(String name) {
+        this.name = name;
+    }
 }

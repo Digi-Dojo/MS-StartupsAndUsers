@@ -83,6 +83,19 @@ public class ManageTeamMember {
         return users;
     }
 
+    public TeamMember findByUserIdAndStartupId(Long userId, Long startupId) {
+        searchStartups.findById(startupId);
+        searchUsers.findById(userId);
+
+        Optional<TeamMember> maybeTeamMember = teamMemberRepository.findByPuserIdAndStartupId(userId, startupId);
+
+        if(maybeTeamMember.isEmpty()){
+            throw new IllegalArgumentException("No User with Id " + userId + " belonging to startup with Id " + startupId);
+        }
+
+        return maybeTeamMember.get();
+    }
+
     public TeamMember createTeamMember(Long userId, String role, Long startupId){
         User user = searchUsers.findById(userId);
         Startup startup = searchStartups.findById(startupId);

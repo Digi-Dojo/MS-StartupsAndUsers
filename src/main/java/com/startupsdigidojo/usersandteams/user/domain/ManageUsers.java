@@ -25,14 +25,14 @@ public class ManageUsers {
         return userRepository.save(new User(name, mailAddress, password));
     }
 
-    public boolean deleteUser(String name, String mailAddress, String password){
+    public boolean deleteUser(String mailAddress){
         Optional<User> maybeUser = userRepository.findByMailAddress(mailAddress);
 
         if(maybeUser.isEmpty()){
             throw new IllegalArgumentException("User doesn't exist");
         }
 
-        userRepository.delete(new User(name,mailAddress,password));
+        userRepository.delete(maybeUser.get());
 
         return true;
     }

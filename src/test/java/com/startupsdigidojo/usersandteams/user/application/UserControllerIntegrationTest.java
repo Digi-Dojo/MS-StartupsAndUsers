@@ -27,48 +27,54 @@ public class UserControllerIntegrationTest {
         this.mockMvc = MockMvcBuilders.webAppContextSetup(this.webApplicationContext).build();
     }
     @Test
-    public void givenWac_whenServletContext_thenItProvidesUserController() {
+    public void givenWac_whenServletContext_thenItProvidesUserController() throws Exception{
         ServletContext servletContext = webApplicationContext.getServletContext();
         assertNotNull(servletContext);
         assertTrue(servletContext instanceof MockServletContext);
         assertNotNull(webApplicationContext.getBean("userController"));
     }
 
-//    @Test
-//    public void getMappingWithEmailReturnsUserWithIndicatedEmail() throws Exception {
-//
-//        mockMvc.perform(get("/v1/users/matteo.larcer@gmail.com"))
-//                .andDo(print())
-//                .andExpect(status().isOk())
-//                .andExpect(jsonPath("$.mailAddress").value("matteo.larcer@gmail.com"));
-//    }
+    @Test
+    public void getMappingWithEmailReturnsUserWithIndicatedEmail() throws Exception {
+        mockMvc.perform(post("/v1/users/create")
+                        .contentType("application/json")
+                        .content("{\"name\":\"Matteo\",\"mailAddress\":\"matteo.larcer@gmail.com\",\"password\":\"passwordMatteo\"}"))
+                .andExpect(status().isOk());
+        mockMvc.perform(get("/v1/users/matteo.larcer@gmail.com"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.mailAddress").value("matteo.larcer@gmail.com"));
+        mockMvc.perform(delete("/v1/users/delete")
+                        .contentType("application/json")
+                        .content("{\"mailAddress\":\"matteo.larcer@gmail.com\"}"))
+                .andExpect(status().isOk());
+    }
 
     @Test
     public void postMappingCreatesUser() throws Exception {
         mockMvc.perform(post("/v1/users/create")
-                        .contentType("application/json")
-                        .content("{\"name\":\"Ernald\",\"mailAddress\":\"enrami@unibz.org\",\"password\":\"passwordErnald\"}"))
-                .andDo(print())
+                .contentType("application/json")
+                .content("{\"name\":\"Ernald\",\"mailAddress\":\"enrami@unibz.org\",\"password\":\"passwordErnald\"}"))
                 .andExpect(status().isOk());
         mockMvc.perform(get("/v1/users/enrami@unibz.org"))
-                .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.mailAddress").value("enrami@unibz.org"));
         mockMvc.perform(delete("/v1/users/delete")
                 .contentType("application/json")
-                .content("{\"name\":\"Ernald\",\"mailAddress\":\"enrami@unibz.org\",\"password\":\"passwordErnald\"}"))
-                .andDo(print())
+                .content("{\"mailAddress\":\"enrami@unibz.org\"}"))
                 .andExpect(status().isOk());
     }
 
-//    @Test
-//    public void deleteMappingDeletesTheUser() throws Exception {
-//        mockMvc.perform(delete("/v1/users/delete")
-//                .contentType("application/json")
-//                .content("{\"name\":\"Ernald\",\"mailAddress\":\"enrami@unibz.org\",\"password\":\"passwordErnald\"}"))
-//                .andDo(print())
-//                .andExpect(status().isOk());
-//    }
+    @Test
+    public void deleteMappingDeletesTheUser() throws Exception {
+        mockMvc.perform(post("/v1/users/create")
+                        .contentType("application/json")
+                        .content("{\"name\":\"Ernald\",\"mailAddress\":\"enrami@unibz.org\",\"password\":\"passwordErnald\"}"))
+                .andExpect(status().isOk());
+        mockMvc.perform(delete("/v1/users/delete")
+                        .contentType("application/json")
+                        .content("{\"mailAddress\":\"enrami@unibz.org\"}"))
+                .andExpect(status().isOk());
+    }
 
 //    @Test
 //    public void postMappingUpdateUserMailUpdatesTheMail() throws Exception {

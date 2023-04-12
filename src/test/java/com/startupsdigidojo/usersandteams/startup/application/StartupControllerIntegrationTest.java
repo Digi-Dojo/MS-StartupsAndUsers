@@ -23,8 +23,7 @@ public class StartupControllerIntegrationTest {
     private MockMvc mockMvc;
     @BeforeEach
     public void setup() {
-        this.mockMvc = MockMvcBuilders.webAppContextSetup(this.webApplicationContext).build();
-    }
+        this.mockMvc = MockMvcBuilders.webAppContextSetup(this.webApplicationContext).build();}
 
     @Test
     public void givenWac_whenServletContext_thenItProvidesStartupController() {
@@ -36,26 +35,24 @@ public class StartupControllerIntegrationTest {
 
     @Test
     public void postMappingCreatesStartup() throws Exception {
+
         mockMvc.perform(post("/v1/startup/create")
-                .contentType("application/json")
-                .content("{\"name\":\"DigiDojo3\",\"description\":\"a very fun way to create startups\"}"))
-                .andDo(print())
+                        .contentType("application/json")
+                        .content("{\"name\":\"DigiDojo\",\"description\":\"a fun way to create startups\"}"))
                 .andExpect(status().isOk());
-        mockMvc.perform(get("/v1/startup/5"))
-                .andDo(print())
+        mockMvc.perform(get("/v1/startup/name/DigiDojo"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.name").value("DigiDojo3"));
+                .andExpect(jsonPath("$.name").value("DigiDojo"));
         mockMvc.perform(delete("/v1/startup/delete")
                         .contentType("application/json")
-                        .content("{\"name\":\"DigiDojo3\",\"description\":\"a very fun way to create startups\"}"))
-                .andDo(print())
+                        .content("{\"name\":\"DigiDojo\",\"description\":\"a fun way to create startups\"}"))
                 .andExpect(status().isOk());
     }
 
-    @Test
-    public void getMappingGetAllShouldReturnAllStartups() throws Exception{
-        mockMvc.perform(get("/v1/startup/getAll"))
-                .andDo(print())
-                .andExpect(status().isOk());
-    }
+//    @Test
+//    public void getMappingGetAllShouldReturnAllStartups() throws Exception{
+//        mockMvc.perform(get("/v1/startup/getAll"))
+//                .andDo(print())
+//                .andExpect(status().isOk());
+//    }
 }

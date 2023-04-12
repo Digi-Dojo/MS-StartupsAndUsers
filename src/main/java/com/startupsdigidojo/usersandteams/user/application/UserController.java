@@ -47,7 +47,7 @@ public class UserController {
 
     @DeleteMapping( "/delete")
     public boolean deleteUser(@RequestBody DeleteUserDTO dto) {
-        return manageUsers.deleteUser(dto.getName(), dto.getMailAddress(), dto.getPassword());
+        return manageUsers.deleteUser(dto.getMailAddress());
     }
 
     @PostMapping("/updateMail")
