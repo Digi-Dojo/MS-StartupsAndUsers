@@ -5,8 +5,6 @@ import com.startupsdigidojo.usersandteams.user.domain.ManageUsers;
 import com.startupsdigidojo.usersandteams.user.domain.SearchUsers;
 import com.startupsdigidojo.usersandteams.user.domain.User;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -30,23 +28,21 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<User> loginUser(@RequestBody UserDTO dto) {
+    public User loginUser(@RequestBody UserDTO dto) {
         User dbUser = searchUsers.findByMailAddress(dto.getMailAddress());
-        if (dbUser != null && loginService.verifyPassword(dto.getPassword(), dbUser.getPassword())) {
-            return ResponseEntity.ok(dbUser);
-        } else {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-        }
+        return loginService.verifyPassword(dbUser, dto.getPassword());
+    }
+
+    @PostMapping("/updatePassword")
+    public User updatePassword(@RequestBody UpdatePasswordDTO dto) {
+        User dbUser = searchUsers.findByMailAddress(dto.getMailAddress());
+        User verifiedUser = loginService.verifyPassword(dbUser, dto.getOldPassword());
+        return manageUsers.updatePassword(verifiedUser, loginService.hashPassword(dto.newPassword));
     }
 
     @PostMapping( "/create")
     public User createNewUser(@RequestBody UserDTO dto) {
         return manageUsers.createUser(dto.getName(), dto.getMailAddress(), loginService.hashPassword(dto.getPassword()));
-    }
-
-    @PostMapping( "/update")
-    public User updateUser(@RequestBody UserDTO dto) {
-        return manageUsers.update(dto.getName(), dto.getMailAddress(), dto.getPassword());
     }
 
     @DeleteMapping( "/delete")

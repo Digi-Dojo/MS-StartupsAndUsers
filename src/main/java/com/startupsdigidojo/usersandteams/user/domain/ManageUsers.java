@@ -37,14 +37,9 @@ public class ManageUsers {
         return true;
     }
 
-    public User update(String name, String mailAddress, String password){
-        Optional<User> maybeUser = userRepository.findByMailAddress(mailAddress);
-
-        if(maybeUser.isEmpty()){
-            throw new IllegalArgumentException("The user doesn't exist");
-        }
-
-        return userRepository.save(new User(name, mailAddress, password));
+    public User updatePassword(User user, String newPassword){
+        user.setPassword(newPassword);
+        return userRepository.save(user);
     }
 
     public User updateUserMail(String oldMail, String newMail){
