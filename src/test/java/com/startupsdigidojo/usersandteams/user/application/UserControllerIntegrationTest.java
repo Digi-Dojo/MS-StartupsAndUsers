@@ -14,7 +14,6 @@ import static org.junit.jupiter.api.Assertions.*;
 
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @SpringBootTest
@@ -74,15 +73,29 @@ public class UserControllerIntegrationTest {
                         .contentType("application/json")
                         .content("{\"mailAddress\":\"enrami@unibz.org\"}"))
                 .andExpect(status().isOk());
+        mockMvc.perform(get("/v1/users/enrami@unibz.org"))
+                .andExpect(status().isBadRequest());
     }
 
-//    @Test
-//    public void postMappingUpdateUserMailUpdatesTheMail() throws Exception {
-//        mockMvc.perform(delete("/v1/users/updateMail")
-//                        .contentType("application/json")
-//                        .content("{\"oldMail\":\"enrami@unibz.org\",\"newMail\":\"enrami@unibz.it\"}"))
-//                        .andDo(print())
-//                        .andExpect(status().isOk());
-//    }
+    @Test
+    public void postMappingUpdateUserMailUpdatesTheMail() throws Exception {
+        mockMvc.perform(post("/v1/users/create")
+                .contentType("application/json")
+                .content("{\"name\":\"Ernald\",\"mailAddress\":\"enrami@unibz.org\",\"password\":\"passwordErnald\"}"));
+        mockMvc.perform(post("/v1/users/updateMail")
+                        .contentType("application/json")
+                        .content("{\"oldMail\":\"enrami@unibz.org\",\"newMail\":\"enrami@unibz.it\"}"))
+                        .andExpect(status().isOk());
+        mockMvc.perform(get("/v1/users/enrami@unibz.it"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.mailAddress").value("enrami@unibz.it"))
+                .andExpect(jsonPath("$.name").value("Ernald"));
+        mockMvc.perform(get("/v1/users/enrami@unibz.org"))
+                .andExpect(status().isBadRequest());
+        mockMvc.perform(delete("/v1/users/delete")
+                        .contentType("application/json")
+                        .content("{\"mailAddress\":\"enrami@unibz.it\"}"))
+                .andExpect(status().isOk());
+    }
 }
 
