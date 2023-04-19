@@ -23,7 +23,7 @@ public class TeamMember {
     public TeamMember() {
     }
 
-    public TeamMember(User puser, String role, Startup startup){
+    public TeamMember(User puser, String role, Startup startup) {
         this.puser = puser;
         this.role = role;
         this.startup = startup;

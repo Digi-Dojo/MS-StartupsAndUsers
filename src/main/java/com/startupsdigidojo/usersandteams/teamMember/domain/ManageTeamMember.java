@@ -21,16 +21,16 @@ public class ManageTeamMember {
 
     @Autowired
     public ManageTeamMember(TeamMemberRepository teamMemberRepository, UserRepository userRepository,
-                            StartupRepository startupRepository){
+                            StartupRepository startupRepository) {
         this.teamMemberRepository = teamMemberRepository;
         searchUsers = new SearchUsers(userRepository);
         searchStartups = new SearchStartups(startupRepository);
     }
 
-    public TeamMember findByTeamMemberId(Long id){
+    public TeamMember findByTeamMemberId(Long id) {
         Optional<TeamMember> maybeTeamMember = teamMemberRepository.findById(id);
 
-        if(maybeTeamMember.isEmpty()){
+        if (maybeTeamMember.isEmpty()) {
             throw new IllegalArgumentException("Team Member with the id #" + id + " not found");
         }
         return maybeTeamMember.get();
@@ -40,68 +40,74 @@ public class ManageTeamMember {
         A User could appear in more than one Start up
      */
 
-    public List<TeamMember> findAllByUserId(Long id){
+    //tested
+    public List<TeamMember> findAllByUserId(Long id) {
         searchUsers.findById(id);
         Optional<List<TeamMember>> maybeTeamMember = teamMemberRepository.findAllByPuserId(id);
 
-        if(maybeTeamMember.isEmpty()){
+        if (maybeTeamMember.isEmpty()) {
             throw new IllegalArgumentException("Team Members with user id #" + id + " not found");
         }
         return maybeTeamMember.get();
     }
 
-    public List<TeamMember> findByRole(String role){
+    //tested
+    public List<TeamMember> findByRole(String role) {
         Optional<List<TeamMember>> maybeExistRole = teamMemberRepository.findAllByRole(role);
 
-        if(maybeExistRole.isEmpty()){
+        if (maybeExistRole.isEmpty()) {
             throw new IllegalArgumentException("Team Member with role #" + role + " not found");
         }
         return maybeExistRole.get();
     }
 
-    public List<TeamMember> findTeamMembersByStartupId(Long startupId){
+    //tested
+    public List<TeamMember> findTeamMembersByStartupId(Long startupId) {
         searchStartups.findById(startupId);
         Optional<List<TeamMember>> maybeTeamMembers = teamMemberRepository.findTeamMembersByStartupId(startupId);
 
-        if(maybeTeamMembers.isEmpty()){
+        if (maybeTeamMembers.isEmpty()) {
             throw new IllegalArgumentException("No Team Members belonging to startup with Id " + startupId);
         }
 
         return maybeTeamMembers.get();
     }
 
-    public List<User> findUsersByStartupId(Long startupId){
+    //tested
+    public List<User> findUsersByStartupId(Long startupId) {
         List<TeamMember> teamMembers = findTeamMembersByStartupId(startupId);
         List<User> users = new ArrayList<>();
         Set<Long> userIds = new HashSet<>();
-        for(TeamMember t : teamMembers){
+        for (TeamMember t : teamMembers) {
             userIds.add(t.getPuser().getId());
         }
-        for(Long id : userIds){
+        for (Long id : userIds) {
             users.add(searchUsers.findById(id));
         }
         return users;
     }
 
+    //tested
     public TeamMember findByUserIdAndStartupId(Long userId, Long startupId) {
         searchStartups.findById(startupId);
         searchUsers.findById(userId);
 
         Optional<TeamMember> maybeTeamMember = teamMemberRepository.findByPuserIdAndStartupId(userId, startupId);
 
-        if(maybeTeamMember.isEmpty()){
+        if (maybeTeamMember.isEmpty()) {
             throw new IllegalArgumentException("No User with Id " + userId + " belonging to startup with Id " + startupId);
         }
 
         return maybeTeamMember.get();
     }
 
-    public TeamMember createTeamMember(Long userId, String role, Long startupId){
+    //tested
+    public TeamMember createTeamMember(Long userId, String role, Long startupId) {
         User user = searchUsers.findById(userId);
         Startup startup = searchStartups.findById(startupId);
         Optional<TeamMember> maybeTeamMember = teamMemberRepository.findByPuserIdAndStartupId(user.getId(), startup.getId());
 
-        if(maybeTeamMember.isPresent()){
+        if (maybeTeamMember.isPresent()) {
             throw new IllegalArgumentException("A Team Member with User id #" + user.getId() + " and Startup id # "
                     + startup.getId() + " is already present");
         }
@@ -109,20 +115,22 @@ public class ManageTeamMember {
         return teamMemberRepository.save(new TeamMember(user, role, startup));
     }
 
+    //tested
     public void deleteTeamMember(Long id) {
         Optional<TeamMember> maybeTeamMember = teamMemberRepository.findById(id);
 
-        if(maybeTeamMember.isEmpty()){
+        if (maybeTeamMember.isEmpty()) {
             throw new IllegalArgumentException("No Team with id #" + id + " present yet");
         }
 
         teamMemberRepository.delete(maybeTeamMember.get());
     }
 
-    public TeamMember updateTeamMemberRole(Long id, String newRole){
+    //tested
+    public TeamMember updateTeamMemberRole(Long id, String newRole) {
         Optional<TeamMember> maybeTeamMember = teamMemberRepository.findById(id);
 
-        if(maybeTeamMember.isEmpty()){
+        if (maybeTeamMember.isEmpty()) {
             throw new IllegalArgumentException("No User with id TeamMember #" + id + " present in any Team yet");
         }
 

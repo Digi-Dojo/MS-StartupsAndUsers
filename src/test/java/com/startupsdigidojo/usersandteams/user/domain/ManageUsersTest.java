@@ -83,10 +83,7 @@ public class ManageUsersTest {
 
     @Test
     public void deleteUserThrowsExceptionForNonExistingUser() {
-
-        String userName = "testUser";
         String userMail = "TestUser@testmail.com";
-        String userPassword = "testPassword";
 
         when(userRepository.findByMailAddress(anyString())).thenReturn(Optional.empty());
         assertThatThrownBy(() -> underTest.deleteUser(userMail)).isInstanceOf(IllegalArgumentException.class);
@@ -103,7 +100,7 @@ public class ManageUsersTest {
     @Test
     public void UpdatesMailAddressThrowsExceptionForNonExistingOldMailAddress() {
         User user = new User("testUser", "testUser@testmail.com", "testPassword");
-        when(userRepository.findByMailAddress(anyString())).thenReturn(Optional.of(new User("testUser", "testUser@testmail.com", "testPassword" )));
+        when(userRepository.findByMailAddress(anyString())).thenReturn(Optional.empty());
 
         assertThatThrownBy(() -> underTest.updateUserMail("NonExistingMail", user.getMailAddress())).isInstanceOf(IllegalArgumentException.class);
     }

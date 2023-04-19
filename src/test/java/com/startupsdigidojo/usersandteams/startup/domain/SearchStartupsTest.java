@@ -1,4 +1,5 @@
 package com.startupsdigidojo.usersandteams.startup.domain;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -22,15 +23,17 @@ public class SearchStartupsTest {
     private StartupRepository startupRepository;
 
     @BeforeEach
-    void setUp() {underTest = new SearchStartups(startupRepository);}
+    void setUp() {
+        underTest = new SearchStartups(startupRepository);
+    }
 
     @Test
-    public void findByIdReturnsStartupWithMatchingId(){
+    public void findByIdReturnsStartupWithMatchingId() {
         Long id = randomPositiveLong();
         String name = "name";
         String description = "description";
         when(startupRepository.findById(anyLong()))
-                .thenReturn(Optional.of(new Startup(id,name,description)));
+                .thenReturn(Optional.of(new Startup(id, name, description)));
 
         Startup result = underTest.findById(id);
 
@@ -45,7 +48,7 @@ public class SearchStartupsTest {
     }
 
     @Test
-    public void findByIdThrowsForNotExistingStartup(){
+    public void findByIdThrowsForNotExistingStartup() {
         when(startupRepository.findById(anyLong()))
                 .thenReturn(Optional.empty());
         assertThatThrownBy(() -> underTest.findById(randomPositiveLong()))
@@ -53,14 +56,17 @@ public class SearchStartupsTest {
     }
 
     @Test
-    public void findAllFindsAllExistingStartups(){
+    public void findAllFindsAllExistingStartups() {
         List<Startup> startups = new ArrayList<>();
-        Startup startup1 = new Startup(1,"name1","description1");
-        Startup startup2 = new Startup(2,"name2","description2");
+        Startup startup1 = new Startup(1, "name1", "description1");
+        Startup startup2 = new Startup(2, "name2", "description2");
         startups.add(startup1);
         startups.add(startup2);
         when(startupRepository.findAll())
-                .thenReturn(new ArrayList<Startup>(){{add(startup1); add(startup2);}});
+                .thenReturn(new ArrayList<Startup>() {{
+                    add(startup1);
+                    add(startup2);
+                }});
         List<Startup> result = underTest.findAll();
         assertThat(result).isInstanceOf(List.class);
         assertThat(result.size()).isEqualTo(startups.size());
@@ -69,7 +75,7 @@ public class SearchStartupsTest {
     }
 
     @Test
-    public void findAllThrowsForNoExistingStartups(){
+    public void findAllThrowsForNoExistingStartups() {
         when(startupRepository.findAll())
                 .thenReturn(new ArrayList<Startup>());
         assertThatThrownBy(() -> underTest.findAll())
@@ -77,12 +83,12 @@ public class SearchStartupsTest {
     }
 
     @Test
-    public void findByNameReturnsStartupWithMatchingName(){
+    public void findByNameReturnsStartupWithMatchingName() {
         Long id = randomPositiveLong();
         String name = "name";
         String description = "description";
         when(startupRepository.findByName(name))
-                .thenReturn(Optional.of(new Startup(id,name,description)));
+                .thenReturn(Optional.of(new Startup(id, name, description)));
 
         Startup result = underTest.findByName(name);
 
@@ -97,7 +103,7 @@ public class SearchStartupsTest {
     }
 
     @Test
-    public void findByNameThrowsForNotExistingStartup(){
+    public void findByNameThrowsForNotExistingStartup() {
         when(startupRepository.findByName(anyString()))
                 .thenReturn(Optional.empty());
         assertThatThrownBy(() -> underTest.findByName(anyString()))
