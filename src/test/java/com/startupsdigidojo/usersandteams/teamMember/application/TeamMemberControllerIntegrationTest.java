@@ -146,15 +146,100 @@ public class TeamMemberControllerIntegrationTest {
                 .andExpect(status().isOk());
     }
 
-    // might be useless since the test for creating a team member also implements the delete, and the only
-    //thing that would change between that method and this, is a check with a get request
-    //(having two test methods that big with just a check as difference wouldn't be very reasonable)
-//    @Test
-//    public void deleteMappingShouldDeleteTeamMember() throws Exception{
-//        mockMvc.perform(delete("/v1/teammembers/delete")
-//                .contentType("application/json")
-//                .content("{\"id\":\"3\"}"))
-//                .andDo(print())
-//                .andExpect(status().isOk());
-//    }
+    @Test
+    public void deleteMappingShouldDeleteTeamMember() throws Exception{
+        long startupId;
+        long teamMemberId;
+        long userId;
+
+        userId = new JSONObject(mockMvc.perform(post("/v1/users/create")
+                        .contentType("application/json")
+                        .content("{\"name\":\"Gianluca\",\"mailAddress\":\"gianluco@bruco.org\",\"password\":\"passwordBruco\"}"))
+                .andExpect(status().isOk())
+                .andReturn()
+                .getResponse()
+                .getContentAsString())
+                .getLong("id");
+        startupId = new JSONObject(mockMvc.perform(post("/v1/startup/create")
+                        .contentType("application/json")
+                        .content("{\"name\":\"DigiDojo\",\"description\":\"a fun way to create startups\"}"))
+                .andExpect(status().isOk())
+                .andReturn()
+                .getResponse()
+                .getContentAsString())
+                .getLong("id");
+        teamMemberId = new JSONObject(mockMvc.perform(post("/v1/teammembers/create")
+                            .contentType("application/json")
+                            .content("{\"userId\":\"" + userId + "\",\"role\":\"designer\",\"startupId\":\"" + startupId + "\" }"))
+                    .andExpect(status().isOk())
+                    .andReturn()
+                    .getResponse()
+                    .getContentAsString())
+                    .getLong("id");
+        mockMvc.perform(delete("/v1/teammembers/delete")
+                        .contentType("application/json")
+                        .content("{\"id\":\"" + teamMemberId + "\"}"))
+                .andExpect(status().isOk());
+        mockMvc.perform(delete("/v1/users/delete")
+                        .contentType("application/json")
+                        .content("{\"mailAddress\":\"gianluco@bruco.org\"}"))
+                .andExpect(status().isOk());
+        mockMvc.perform(delete("/v1/startup/delete")
+                        .contentType("application/json")
+                        .content("{\"name\":\"DigiDojo\",\"description\":\"a fun way to create startups\"}"))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    public void getMappingWithIdReturnsTeamMemberWithSpecifiedId() throws Exception{
+        Long userIds;
+        userIds = new JSONObject(mockMvc.perform(post("/v1/users/create")
+                        .contentType("application/json")
+                        .content("{\"name\":\"Gianluca\",\"mailAddress\":\"gianluco@bruco.org\",\"password\":\"passwordBruco\"}"))
+                .andExpect(status().isOk())
+                .andReturn()
+                .getResponse()
+                .getContentAsString())
+                .getLong("id");
+        Long startupId = new JSONObject(mockMvc.perform(post("/v1/startup/create")
+                        .contentType("application/json")
+                        .content("{\"name\":\"DigiDojo\",\"description\":\"a fun way to create startups\"}"))
+                .andExpect(status().isOk())
+                .andReturn()
+                .getResponse()
+                .getContentAsString())
+                .getLong("id");
+        Long teamMember1Id;
+        teamMember1Id = new JSONObject(mockMvc.perform(post("/v1/teammembers/create")
+                    .contentType("application/json")
+                    .content("{\"userId\":\"" + userIds + "\",\"role\":\"designer\",\"startupId\":\"" + startupId + "\" }"))
+                .andExpect(status().isOk())
+                .andReturn()
+                .getResponse()
+                .getContentAsString())
+                .getLong("id");
+
+        JSONArray teamMembers = new JSONArray(mockMvc.perform(get("/v1/teammembers/{Id}", teamMember1Id))
+                .andExpect(status().isOk())
+                .andReturn()
+                .getResponse()
+                .getContentAsString());
+        assertEquals(teamMember1Id,teamMembers.getJSONObject(0).getLong("id"));
+        mockMvc.perform(delete("/v1/teammembers/delete")
+                    .contentType("application/json")
+                    .content("{\"id\":\"" + teamMember1Id + "\"}"))
+                    .andExpect(status().isOk());
+        mockMvc.perform(delete("/v1/users/delete")
+                        .contentType("application/json")
+                        .content("{\"mailAddress\":\"enrami@unibz.org\"}"))
+                .andExpect(status().isOk());
+        mockMvc.perform(delete("/v1/users/delete")
+                        .contentType("application/json")
+                        .content("{\"mailAddress\":\"gianluco@bruco.org\"}"))
+                .andExpect(status().isOk());
+        mockMvc.perform(delete("/v1/startup/delete")
+                        .contentType("application/json")
+                        .content("{\"name\":\"DigiDojo\",\"description\":\"a fun way to create startups\"}"))
+                .andExpect(status().isOk());
+    }
 }
