@@ -16,6 +16,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @SpringBootTest
@@ -219,19 +220,15 @@ public class TeamMemberControllerIntegrationTest {
                 .getContentAsString())
                 .getLong("id");
 
-        JSONArray teamMembers = new JSONArray(mockMvc.perform(get("/v1/teammembers/{Id}", teamMember1Id))
+        JSONObject teamMembers = new JSONObject(mockMvc.perform(get("/v1/teammembers/{Id}", teamMember1Id))
                 .andExpect(status().isOk())
                 .andReturn()
                 .getResponse()
                 .getContentAsString());
-        assertEquals(teamMember1Id,teamMembers.getJSONObject(0).getLong("id"));
+        assertEquals(teamMember1Id,teamMembers.getLong("id"));
         mockMvc.perform(delete("/v1/teammembers/delete")
                     .contentType("application/json")
                     .content("{\"id\":\"" + teamMember1Id + "\"}"))
-                    .andExpect(status().isOk());
-        mockMvc.perform(delete("/v1/users/delete")
-                        .contentType("application/json")
-                        .content("{\"mailAddress\":\"enrami@unibz.org\"}"))
                 .andExpect(status().isOk());
         mockMvc.perform(delete("/v1/users/delete")
                         .contentType("application/json")
