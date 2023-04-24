@@ -14,6 +14,11 @@ public class SearchUsers {
         this.userRepository = userRepository;
     }
 
+    /**
+     * @param mailAddress the mail address of the user we want to find
+     * @return the user with the provided mail address
+     * @throws IllegalArgumentException if no user with the provided mail address is found
+     */
     public User findByMailAddress(String mailAddress){
         Optional<User> maybeUser = userRepository.findByMailAddress(mailAddress);
 
@@ -23,6 +28,11 @@ public class SearchUsers {
         return maybeUser.get();
     }
 
+    /**
+     * @param id id of the user we want to find
+     * @return the user with the provided id
+     * @throws IllegalArgumentException if no user with the provided id is found
+     */
     public User findById(long id){
         Optional<User> maybeUser = userRepository.findById(id);
 

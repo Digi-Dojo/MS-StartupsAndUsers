@@ -27,6 +27,11 @@ public class ManageTeamMember {
         searchStartups = new SearchStartups(startupRepository);
     }
 
+    /**
+     * @param id id of the team member we want to find
+     * @return the team member with the provided id
+     * @throws IllegalArgumentException if no team member with the provided id is found
+     */
     public TeamMember findByTeamMemberId(Long id) {
         Optional<TeamMember> maybeTeamMember = teamMemberRepository.findById(id);
 
@@ -36,11 +41,11 @@ public class ManageTeamMember {
         return maybeTeamMember.get();
     }
 
-    /*
-        A User could appear in more than one Start up
+    /**
+     * @param id id of the user
+     * @return a list containing all the instances in the different startups of team member the user with the provided id belongs to
+     * @throws IllegalArgumentException if no team member with the provided user id is found
      */
-
-    //tested
     public List<TeamMember> findAllByUserId(Long id) {
         searchUsers.findById(id);
         Optional<List<TeamMember>> maybeTeamMember = teamMemberRepository.findAllByPuserId(id);
@@ -51,7 +56,11 @@ public class ManageTeamMember {
         return maybeTeamMember.get();
     }
 
-    //tested
+    /**
+     * @param role role covered by the team members we want to find
+     * @return a list containing all the team members that cover the provided role
+     * @throws IllegalArgumentException if no team member with the provided role is found
+     */
     public List<TeamMember> findByRole(String role) {
         Optional<List<TeamMember>> maybeExistRole = teamMemberRepository.findAllByRole(role);
 
@@ -61,7 +70,11 @@ public class ManageTeamMember {
         return maybeExistRole.get();
     }
 
-    //tested
+    /**
+     * @param startupId the id of the startup, of which we want to find all team members
+     * @return a list containing all the team members in the startup with the provided startupId
+     * @throws IllegalArgumentException if no team member belonging to the startup is found
+     */
     public List<TeamMember> findTeamMembersByStartupId(Long startupId) {
         searchStartups.findById(startupId);
         Optional<List<TeamMember>> maybeTeamMembers = teamMemberRepository.findTeamMembersByStartupId(startupId);
@@ -73,7 +86,11 @@ public class ManageTeamMember {
         return maybeTeamMembers.get();
     }
 
-    //tested
+    /**
+     * @param startupId the id of the startup, of which we want to find all affiliated users
+     * @return a list containing all the users that are team members in the startup with the provided startupId
+     * @throws IllegalArgumentException if no team member belonging to the startup is found
+     */
     public List<User> findUsersByStartupId(Long startupId) {
         List<TeamMember> teamMembers = findTeamMembersByStartupId(startupId);
         List<User> users = new ArrayList<>();
@@ -87,7 +104,13 @@ public class ManageTeamMember {
         return users;
     }
 
-    //tested
+    /**
+     * @param userId the id of the user, who is a team member in the startup
+     * @param startupId the id of the startup
+     * @return the team member who is the user with id userId in the startup with startupId
+     * @throws IllegalArgumentException if no user with the provided userId is found, or if no startup with the provided
+     * startupId is found, or if no team member with the provided userId and startupId is found
+     */
     public TeamMember findByUserIdAndStartupId(Long userId, Long startupId) {
         searchStartups.findById(startupId);
         searchUsers.findById(userId);
@@ -101,7 +124,14 @@ public class ManageTeamMember {
         return maybeTeamMember.get();
     }
 
-    //tested
+    /**
+     * @param userId id of the user that wants to become a team member in a startup
+     * @param role the role of the team member in this startup
+     * @param startupId the id of the startup
+     * @return the newly created team member
+     * @throws IllegalArgumentException if no user with the provided userId is found, or if no startup with the provided
+     * startupId is found, or if a team member with the provided userId and startupId already exists
+     */
     public TeamMember createTeamMember(Long userId, String role, Long startupId) {
         User user = searchUsers.findById(userId);
         Startup startup = searchStartups.findById(startupId);
@@ -115,18 +145,26 @@ public class ManageTeamMember {
         return teamMemberRepository.save(new TeamMember(user, role, startup));
     }
 
-    //tested
+    /**
+     * @param id id of the team member we want to delete
+     * @throws IllegalArgumentException if no team member with the provided id is found
+     */
     public void deleteTeamMember(Long id) {
         Optional<TeamMember> maybeTeamMember = teamMemberRepository.findById(id);
 
         if (maybeTeamMember.isEmpty()) {
-            throw new IllegalArgumentException("No Team with id #" + id + " present yet");
+            throw new IllegalArgumentException("No TeamMember with id #" + id + " present yet");
         }
 
         teamMemberRepository.delete(maybeTeamMember.get());
     }
 
-    //tested
+    /**
+     * @param id id of the team member, whose role we want to change
+     * @param newRole the new role that will replace the current one
+     * @return the newly updated team member
+     * @throws IllegalArgumentException if no team member with the provided id is found
+     */
     public TeamMember updateTeamMemberRole(Long id, String newRole) {
         Optional<TeamMember> maybeTeamMember = teamMemberRepository.findById(id);
 

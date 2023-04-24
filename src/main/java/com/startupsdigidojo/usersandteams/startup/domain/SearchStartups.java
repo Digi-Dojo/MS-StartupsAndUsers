@@ -6,6 +6,9 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * Service class that serves to handle the get requests on startups
+ */
 @Service
 public class SearchStartups {
 
@@ -16,6 +19,11 @@ public class SearchStartups {
         this.startupRepository = startupRepository;
     }
 
+    /**
+     * @param id id of the startup we want to find
+     * @return the startup with the provided id
+     * @throws IllegalArgumentException if no startup with the provided id is found
+     */
     public Startup findById(Long id){
         Optional<Startup> maybeStartup = startupRepository.findById(id);
 
@@ -26,6 +34,10 @@ public class SearchStartups {
         return maybeStartup.get();
     }
 
+    /**
+     * @return all the startups in the database
+     * @throws IllegalArgumentException if no startup is present in the database
+     */
     public List<Startup> findAll(){
         List<Startup> list = startupRepository.findAll();
         if(list.isEmpty()){
@@ -34,6 +46,11 @@ public class SearchStartups {
         return list;
     }
 
+    /**
+     * @param name name of the startup we want to find
+     * @return the startup with the provided name
+     * @throws IllegalArgumentException if no startup with the provided name is found
+     */
     public Startup findByName(String name){
         Optional<Startup> maybeStartup = startupRepository.findByName(name);
 
