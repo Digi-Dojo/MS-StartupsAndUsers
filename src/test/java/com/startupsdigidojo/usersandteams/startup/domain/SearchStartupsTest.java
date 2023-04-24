@@ -51,8 +51,10 @@ public class SearchStartupsTest {
     public void findByIdThrowsForNotExistingStartup() {
         when(startupRepository.findById(anyLong()))
                 .thenReturn(Optional.empty());
-        assertThatThrownBy(() -> underTest.findById(randomPositiveLong()))
-                .isInstanceOf(IllegalArgumentException.class);
+        Long id = randomPositiveLong();
+        assertThatThrownBy(() -> underTest.findById(id))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("Startup with id " + id + " is not present in the database");
     }
 
     @Test
@@ -77,9 +79,10 @@ public class SearchStartupsTest {
     @Test
     public void findAllThrowsForNoExistingStartups() {
         when(startupRepository.findAll())
-                .thenReturn(new ArrayList<Startup>());
+                .thenReturn(new ArrayList<>());
         assertThatThrownBy(() -> underTest.findAll())
-                .isInstanceOf(IllegalArgumentException.class);
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("No startups in database");
     }
 
     @Test
@@ -106,8 +109,10 @@ public class SearchStartupsTest {
     public void findByNameThrowsForNotExistingStartup() {
         when(startupRepository.findByName(anyString()))
                 .thenReturn(Optional.empty());
-        assertThatThrownBy(() -> underTest.findByName(anyString()))
-                .isInstanceOf(IllegalArgumentException.class);
+        String name = "name";
+        assertThatThrownBy(() -> underTest.findByName(name))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("Startup with name " + name + " does not exist");
     }
 
     private Long randomPositiveLong() {

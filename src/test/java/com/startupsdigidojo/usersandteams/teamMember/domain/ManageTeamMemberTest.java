@@ -16,7 +16,6 @@ import static java.util.Comparator.comparing;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.when;
 
@@ -79,7 +78,9 @@ public class ManageTeamMemberTest {
 
 
         assertThatThrownBy(() -> underTest.createTeamMember(user.getId(), role, startup.getId()))
-                .isInstanceOf(IllegalArgumentException.class);
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("A Team Member with User id #" + user.getId() + " and Startup id # "
+                        + startup.getId() + " is already present");
     }
 
     @Test
@@ -102,15 +103,19 @@ public class ManageTeamMemberTest {
     @Test
     public void updateTeamMemberRoleThrowsForNonExistingTeamMember() {
         when(teamMemberRepository.findById(anyLong())).thenReturn(Optional.empty());
-        assertThatThrownBy(() -> underTest.updateTeamMemberRole(randomPositiveLong(), "role"))
-                .isInstanceOf(IllegalArgumentException.class);
+        Long id = randomPositiveLong();
+        assertThatThrownBy(() -> underTest.updateTeamMemberRole(id, "role"))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("No User with id TeamMember #" + id + " present in any Team yet");
     }
 
     @Test
     public void deleteThrowsForNonExistingTeamMember() {
         when(teamMemberRepository.findById(anyLong())).thenReturn(Optional.empty());
-        assertThatThrownBy(() -> underTest.deleteTeamMember(randomPositiveLong()))
-                .isInstanceOf(IllegalArgumentException.class);
+        Long id = randomPositiveLong();
+        assertThatThrownBy(() -> underTest.deleteTeamMember(id))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("No Team with id #" + id + " present yet");
     }
 
     @Test
@@ -142,7 +147,8 @@ public class ManageTeamMemberTest {
         when(userRepository.findById(user.getId()))
                 .thenReturn(Optional.empty());
         assertThatThrownBy(() -> underTest.findByUserIdAndStartupId(user.getId(), startup.getId()))
-                .isInstanceOf(IllegalArgumentException.class);
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("No user found with id: "+user.getId());
     }
 
     @Test
@@ -150,7 +156,8 @@ public class ManageTeamMemberTest {
         when(startupRepository.findById(startup.getId()))
                 .thenReturn(Optional.empty());
         assertThatThrownBy(() -> underTest.findByUserIdAndStartupId(user.getId(), startup.getId()))
-                .isInstanceOf(IllegalArgumentException.class);
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("Startup with id " + startup.getId() + " is not present in the database");
     }
 
     @Test
@@ -162,7 +169,8 @@ public class ManageTeamMemberTest {
         when(teamMemberRepository.findByPuserIdAndStartupId(user.getId(), startup.getId()))
                 .thenReturn(Optional.empty());
         assertThatThrownBy(() -> underTest.findByUserIdAndStartupId(user.getId(), startup.getId()))
-                .isInstanceOf(IllegalArgumentException.class);
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("No User with Id " + user.getId() + " belonging to startup with Id " + startup.getId());
     }
 
     @Test
@@ -234,7 +242,8 @@ public class ManageTeamMemberTest {
         when(teamMemberRepository.findTeamMembersByStartupId(startup.getId()))
                 .thenReturn(Optional.empty());
         assertThatThrownBy(() -> underTest.findTeamMembersByStartupId(startup.getId()))
-                .isInstanceOf(IllegalArgumentException.class);
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("No Team Members belonging to startup with Id " + startup.getId());
     }
 
     @Test
@@ -265,7 +274,8 @@ public class ManageTeamMemberTest {
         when(teamMemberRepository.findAllByRole(anyString()))
                 .thenReturn(Optional.empty());
         assertThatThrownBy(() -> underTest.findByRole("designer"))
-                .isInstanceOf(IllegalArgumentException.class);
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("Team Member with role #designer not found");
     }
 
     @Test
@@ -300,8 +310,10 @@ public class ManageTeamMemberTest {
                 .thenReturn(Optional.of(user));
         when(teamMemberRepository.findAllByPuserId(anyLong()))
                 .thenReturn(Optional.empty());
-        assertThatThrownBy(() -> underTest.findAllByUserId(randomPositiveLong()))
-                .isInstanceOf(IllegalArgumentException.class);
+        Long id = randomPositiveLong();
+        assertThatThrownBy(() -> underTest.findAllByUserId(id))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("Team Members with user id #" + id + " not found");
     }
 
     @Test
@@ -323,8 +335,10 @@ public class ManageTeamMemberTest {
     public void findByTeamMemberIdThrowsForNonExistingTeamMembers() {
         when(teamMemberRepository.findById(anyLong()))
                 .thenReturn(Optional.empty());
-        assertThatThrownBy(() -> underTest.findByTeamMemberId(randomPositiveLong()))
-                .isInstanceOf(IllegalArgumentException.class);
+        Long id = randomPositiveLong();
+        assertThatThrownBy(() -> underTest.findByTeamMemberId(id))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("Team Member with the id #" + id + " not found");
     }
 
     private Long randomPositiveLong() {

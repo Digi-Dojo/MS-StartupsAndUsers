@@ -47,7 +47,8 @@ public class ManageStartupsTest {
                 .thenReturn(Optional.of(new Startup("GreenGym", "An eco-friendly environment to train in")));
 
         assertThatThrownBy(() -> underTest.createStartup(startup.getName(), startup.getDescription()))
-                .isInstanceOf(IllegalArgumentException.class);
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("Startup with name " + startup.getName() + " already exists");
     }
 
     @Test
@@ -82,7 +83,8 @@ public class ManageStartupsTest {
         String oldName = "oldName";
         when(startupRepository.findByName(newName)).thenReturn(Optional.of(new Startup(newName,"description")));
         assertThatThrownBy(() -> underTest.updateStartupName(oldName,newName))
-                .isInstanceOf(IllegalArgumentException.class);
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("Startup with name " + newName + " already exists");
     }
 
     @Test
@@ -91,7 +93,8 @@ public class ManageStartupsTest {
         String oldName = "oldName";
         when(startupRepository.findByName(anyString())).thenReturn(Optional.empty());
         assertThatThrownBy(() -> underTest.updateStartupName(oldName,newName))
-                .isInstanceOf(IllegalArgumentException.class);
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("Startup with name " + oldName + " does not exist");
     }
 
     @Test
@@ -100,7 +103,8 @@ public class ManageStartupsTest {
         String description = "description";
         when(startupRepository.findByName(anyString())).thenReturn(Optional.empty());
         assertThatThrownBy(() -> underTest.updateStartupDescription(name,description))
-                .isInstanceOf(IllegalArgumentException.class);
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("Startup with name " + name + " does not exist");
     }
 
     @Test
@@ -109,7 +113,8 @@ public class ManageStartupsTest {
         when(startupRepository.findByName(anyString()))
                 .thenReturn(Optional.empty());
         assertThatThrownBy(() -> underTest.deleteStartup(name))
-                .isInstanceOf(IllegalArgumentException.class);
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("Startup with name " + name + " does not exist");
     }
 
 

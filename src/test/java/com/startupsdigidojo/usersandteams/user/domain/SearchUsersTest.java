@@ -42,7 +42,8 @@ public class SearchUsersTest {
     public void findByMailAddressThrowsIllegalArgumentException(){
         when(userRepository.findByMailAddress(anyString())).thenReturn(Optional.empty());
         assertThatThrownBy(() -> underTest.findByMailAddress("malarcher@unibz.it"))
-                .isInstanceOf(IllegalArgumentException.class);
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("No user found with the mail address: malarcher@unibz.it");
     }
     @Test
     public void findByIdReturnsUser(){
@@ -61,7 +62,8 @@ public class SearchUsersTest {
     public void findByIdThrowsIllegalArgumentException(){
         when(userRepository.findById(anyLong())).thenReturn(Optional.empty());
         assertThatThrownBy(() -> underTest.findById(1))
-                .isInstanceOf(IllegalArgumentException.class);
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("No user found with id: 1");
     }
 
 
