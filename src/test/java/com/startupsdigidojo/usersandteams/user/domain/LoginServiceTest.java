@@ -16,26 +16,34 @@ public class LoginServiceTest {
     private static LoginService loginService;
 
     @BeforeAll
-    public static void setUp(){
+    public static void setUp() {
         loginService = new LoginService();
     }
 
     @Test
-    public void hashPasswordIsDeterministicTest(){
+    public void hashPasswordIsDeterministicTest() {
         String password = "password";
-        String hash1 = loginService.hashPassword(password);
-        String hash2 = loginService.hashPassword(password);
-        assertEquals(hash1,hash2);
+        String mailAddress = "mailAddress";
+        String hash1 = loginService.hashPassword(password, mailAddress);
+        String hash2 = loginService.hashPassword(password, mailAddress);
+        assertEquals(hash1, hash2);
     }
 
     @ParameterizedTest
     @MethodSource("generateInput")
-    public void avoidCollisionsTest(String password){
-        String hash = loginService.hashPassword("a");
-        assertNotEquals(hash, loginService.hashPassword(password));
+    public void avoidCollisionsTest(String password) {
+        String hash = loginService.hashPassword("a", "@");
+        assertNotEquals(hash, loginService.hashPassword(password, "@"));
     }
 
-    private static Stream<Arguments> generateInput(){
+    @ParameterizedTest
+    @MethodSource("generateInput")
+    public void avoidCollisionsSamePasswordTest(String mailAddress) {
+        String hash = loginService.hashPassword("@", "a");
+        assertNotEquals(hash, loginService.hashPassword("@", mailAddress));
+    }
+
+    private static Stream<Arguments> generateInput() {
         return Stream.of(
                 Arguments.of("b"),
                 Arguments.of("c"),
@@ -66,9 +74,9 @@ public class LoginServiceTest {
     }
 
     @Test
-    public void verifyPasswordTest(){
-        User aUser = new User("Matteo", "malarcher@unibz.it", loginService.hashPassword("Matteo Password"));
-        User test = loginService.verifyPassword(aUser,"Matteo Password");
+    public void verifyPasswordTest() {
+        User aUser = new User("Matteo", "malarcher@unibz.it", loginService.hashPassword("Matteo Password", "malarcher@unibz.it"));
+        User test = loginService.verifyPassword(aUser, "Matteo Password");
         assertThat(test)
                 .isInstanceOf(User.class)
                 .isNotNull();
@@ -77,9 +85,9 @@ public class LoginServiceTest {
     }
 
     @Test
-    public void verifyPasswordThrowsExceptionTest(){
-        User aUser = new User("Matteo", "malarcher@unibz.it", loginService.hashPassword("Matteo Password"));
-        assertThatThrownBy(() -> loginService.verifyPassword(aUser,"Mariolino Password"))
+    public void verifyPasswordThrowsExceptionTest() {
+        User aUser = new User("Matteo", "malarcher@unibz.it", loginService.hashPassword("Matteo Password", "malarcher@unibz.it"));
+        assertThatThrownBy(() -> loginService.verifyPassword(aUser, "Mariolino Password"))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("Wrong password for this user");
     }
