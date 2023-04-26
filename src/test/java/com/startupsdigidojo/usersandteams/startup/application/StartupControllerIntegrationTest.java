@@ -87,4 +87,6 @@ public class StartupControllerIntegrationTest {
                         .content("{\"name\":\"LessSuccessfulStartup\",\"description\":\"DigiDojo is better\"}"))
                 .andExpect(status().isOk());
     }
+
+
 }

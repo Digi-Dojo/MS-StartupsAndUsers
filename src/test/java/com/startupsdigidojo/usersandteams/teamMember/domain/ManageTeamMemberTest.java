@@ -115,7 +115,7 @@ public class ManageTeamMemberTest {
         Long id = randomPositiveLong();
         assertThatThrownBy(() -> underTest.deleteTeamMember(id))
                 .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("No Team with id #" + id + " present yet");
+                .hasMessage("No TeamMember with id #" + id + " present yet");
     }
 
     @Test

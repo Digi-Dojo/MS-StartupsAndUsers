@@ -38,8 +38,19 @@ public class TeamMemberController {
     }
 
     @DeleteMapping( "/delete")
-    public void deleteTeamMember(@RequestBody DeleteTeamMemberDTO dto) {
-        manageTeamMember.deleteTeamMember(dto.getId());
+    public void deleteTeamMember(@RequestBody DeleteTeamMemberDTO deleteDTO) {
+        manageTeamMember.deleteTeamMember(deleteDTO.getId());
     }
+
+    @PostMapping("/update")
+    public TeamMember updateTeamMemberRole(@RequestBody UpdateTeamMemberRoleDTO updateRoleDTO) {
+        return manageTeamMember.updateTeamMemberRole(updateRoleDTO.getId(), updateRoleDTO.getNewRole());
+    }
+
+    @GetMapping("/role/{role}")
+    public List<TeamMember> findByRole(@RequestBody FindTeamMemberByRoleDTO findByRoleDTO) {
+        return manageTeamMember.findByRole(findByRoleDTO.getRole());
+    }
+
 
 }
