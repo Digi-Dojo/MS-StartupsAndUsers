@@ -105,11 +105,11 @@ public class ManageTeamMember {
     }
 
     /**
-     * @param userId the id of the user, who is a team member in the startup
+     * @param userId    the id of the user, who is a team member in the startup
      * @param startupId the id of the startup
      * @return the team member who is the user with id userId in the startup with startupId
      * @throws IllegalArgumentException if no user with the provided userId is found, or if no startup with the provided
-     * startupId is found, or if no team member with the provided userId and startupId is found
+     *                                  startupId is found, or if no team member with the provided userId and startupId is found
      */
     public TeamMember findByUserIdAndStartupId(Long userId, Long startupId) {
         searchStartups.findById(startupId);
@@ -125,12 +125,12 @@ public class ManageTeamMember {
     }
 
     /**
-     * @param userId id of the user that wants to become a team member in a startup
-     * @param role the role of the team member in this startup
+     * @param userId    id of the user that wants to become a team member in a startup
+     * @param role      the role of the team member in this startup
      * @param startupId the id of the startup
      * @return the newly created team member
      * @throws IllegalArgumentException if no user with the provided userId is found, or if no startup with the provided
-     * startupId is found, or if a team member with the provided userId and startupId already exists
+     *                                  startupId is found, or if a team member with the provided userId and startupId already exists
      */
     public TeamMember createTeamMember(Long userId, String role, Long startupId) {
         User user = searchUsers.findById(userId);
@@ -160,7 +160,7 @@ public class ManageTeamMember {
     }
 
     /**
-     * @param id id of the team member, whose role we want to change
+     * @param id      id of the team member, whose role we want to change
      * @param newRole the new role that will replace the current one
      * @return the newly updated team member
      * @throws IllegalArgumentException if no team member with the provided id is found
