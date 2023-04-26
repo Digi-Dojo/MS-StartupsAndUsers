@@ -8,12 +8,8 @@ public class UpdatePasswordDTO {
 
     String newPassword;
 
-    public UpdatePasswordDTO(String mailAddress, String oldPassword, String newPassword) {
-        this.mailAddress = mailAddress;
-        this.oldPassword = oldPassword;
-        this.newPassword = newPassword;
+    public UpdatePasswordDTO() {
     }
-
 
     public String getMailAddress() {
         return mailAddress;

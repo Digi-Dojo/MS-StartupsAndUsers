@@ -8,6 +8,9 @@ public class UserDTO {
 
     String mailAddress;
 
+    public UserDTO() {
+    }
+
     public String getName() {
         return name;
     }
@@ -29,13 +32,6 @@ public class UserDTO {
     }
 
     public void setMailAddress(String mailAddress) {
-        this.mailAddress = mailAddress;
-    }
-
-
-    public UserDTO(String name, String password, String mailAddress) {
-        this.name = name;
-        this.password = password;
         this.mailAddress = mailAddress;
     }
 }

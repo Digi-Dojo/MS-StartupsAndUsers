@@ -7,10 +7,6 @@ public class FindTeamMemberByIdDTO {
     public FindTeamMemberByIdDTO() {
     }
 
-    public FindTeamMemberByIdDTO(Long id) {
-        this.id = id;
-    }
-
     public Long getId() {
         return id;
     }

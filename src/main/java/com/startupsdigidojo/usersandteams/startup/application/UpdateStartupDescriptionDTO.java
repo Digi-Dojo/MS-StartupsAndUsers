@@ -5,9 +5,7 @@ public class UpdateStartupDescriptionDTO {
     private String name;
     private String description;
 
-    public UpdateStartupDescriptionDTO(String name, String description) {
-        this.name = name;
-        this.description = description;
+    public UpdateStartupDescriptionDTO() {
     }
 
     public String getName() {

@@ -6,10 +6,7 @@ public class UpdateTeamMemberRoleDTO {
     private String oldRole;
     private String newRole;
 
-    public UpdateTeamMemberRoleDTO(Long id, String oldRole, String newRole) {
-        this.id = id;
-        this.oldRole = oldRole;
-        this.newRole = newRole;
+    public UpdateTeamMemberRoleDTO() {
     }
 
     public Long getId() {

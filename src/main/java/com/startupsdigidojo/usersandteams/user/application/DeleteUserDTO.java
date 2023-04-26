@@ -8,6 +8,9 @@ public class DeleteUserDTO {
     private String mailAddress;
     private String password;
 
+    public DeleteUserDTO() {
+    }
+
     public void setName(String name) {
         this.name = name;
     }
@@ -17,12 +20,6 @@ public class DeleteUserDTO {
     }
 
     public void setPassword(String password) {
-        this.password = password;
-    }
-
-    DeleteUserDTO(String name, String mailAddress, String password) {
-        this.name = name;
-        this.mailAddress = mailAddress;
         this.password = password;
     }
 

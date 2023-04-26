@@ -7,10 +7,6 @@ public class DeleteTeamMemberDTO {
     public DeleteTeamMemberDTO() {
     }
 
-    public DeleteTeamMemberDTO(Long id) {
-        this.id = id;
-    }
-
     public Long getId() {
         return id;
     }
