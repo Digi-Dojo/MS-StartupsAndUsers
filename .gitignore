@@ -46,3 +46,5 @@ gradle-app.setting
 .gradletasknamecache
 # TestCoverageReport
 coverageReport
+# Javadoc folder
+javadocumentation
