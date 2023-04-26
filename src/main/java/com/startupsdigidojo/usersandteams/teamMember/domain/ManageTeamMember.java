@@ -172,7 +172,9 @@ public class ManageTeamMember {
             throw new IllegalArgumentException("No User with id TeamMember #" + id + " present in any Team yet");
         }
 
-        return teamMemberRepository.save(new TeamMember(maybeTeamMember.get().getPuser(), newRole, maybeTeamMember.get().getStartup()));
+        TeamMember teamMember = maybeTeamMember.get();
+        teamMember.setRole(newRole);
+        return teamMemberRepository.save(teamMember);
     }
 
 
