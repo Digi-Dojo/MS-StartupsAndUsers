@@ -1,4 +1,5 @@
 package com.startupsdigidojo.usersandteams.startup.application;
+
 import jakarta.servlet.ServletContext;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -16,6 +17,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @SpringBootTest
@@ -23,9 +25,11 @@ public class StartupControllerIntegrationTest {
     @Autowired
     private WebApplicationContext webApplicationContext;
     private MockMvc mockMvc;
+
     @BeforeEach
     public void setup() {
-        this.mockMvc = MockMvcBuilders.webAppContextSetup(this.webApplicationContext).build();}
+        this.mockMvc = MockMvcBuilders.webAppContextSetup(this.webApplicationContext).build();
+    }
 
     @Test
     public void givenWac_whenServletContext_thenItProvidesStartupController() {
@@ -53,7 +57,7 @@ public class StartupControllerIntegrationTest {
     //need to decide whether to check only the id (like in the team member int test) or all the fields
     //to keep the code consistent
     @Test
-    public void getMappingGetAllShouldReturnAllStartups() throws Exception{
+    public void getMappingGetAllShouldReturnAllStartups() throws Exception {
         MvcResult result1 = mockMvc.perform(post("/v1/startup/create")
                         .contentType("application/json")
                         .content("{\"name\":\"DigiDojo\",\"description\":\"a fun way to create startups\"}"))
@@ -71,20 +75,23 @@ public class StartupControllerIntegrationTest {
                 .andReturn();
         JSONArray array = new JSONArray(result3.getResponse().getContentAsString());
         JSONObject object3 = array.getJSONObject(0);
-        assertEquals(startupId1,object3.getLong("id"));
-        assertEquals("DigiDojo",object3.getString("name"));
-        assertEquals("a fun way to create startups",object3.getString("description"));
+        assertEquals(startupId1, object3.getLong("id"));
+        assertEquals("DigiDojo", object3.getString("name"));
+        assertEquals("a fun way to create startups", object3.getString("description"));
         object3 = array.getJSONObject(1);
-        assertEquals(startupId2,object3.getLong("id"));
-        assertEquals("LessSuccessfulStartup",object3.getString("name"));
-        assertEquals("DigiDojo is better",object3.getString("description"));
+        assertEquals(startupId2, object3.getLong("id"));
+        assertEquals("LessSuccessfulStartup", object3.getString("name"));
+        assertEquals("DigiDojo is better", object3.getString("description"));
         mockMvc.perform(delete("/v1/startup/delete")
                         .contentType("application/json")
-                        .content("{\"name\":\"DigiDojo\",\"description\":\"a fun way to create startups\"}"))
+                        .content("{\"name\":\"DigiDojo\"}"))
+                .andDo(print())
                 .andExpect(status().isOk());
         mockMvc.perform(delete("/v1/startup/delete")
                         .contentType("application/json")
-                        .content("{\"name\":\"LessSuccessfulStartup\",\"description\":\"DigiDojo is better\"}"))
+                        .content("{\"name\":\"LessSuccessfulStartup\"}"))
                 .andExpect(status().isOk());
     }
+
+
 }

@@ -15,6 +15,13 @@ public class ManageUsers {
         this.userRepository = userRepository;
     }
 
+    /**
+     * @param name name of the user
+     * @param mailAddress mail address of the user
+     * @param password password of the user
+     * @return the newly created user
+     * @throws IllegalArgumentException if a user with the provided mail address already exists
+     */
     public User createUser(String name, String mailAddress, String password){
         Optional<User> maybeUser = userRepository.findByMailAddress(mailAddress);
 
@@ -25,6 +32,11 @@ public class ManageUsers {
         return userRepository.save(new User(name, mailAddress, password));
     }
 
+    /**
+     * @param mailAddress mail address of the user we want to delete
+     * @return true if the operation is successful
+     * @throws IllegalArgumentException if no user with the provided mail address is found
+     */
     public boolean deleteUser(String mailAddress){
         Optional<User> maybeUser = userRepository.findByMailAddress(mailAddress);
 
@@ -37,11 +49,22 @@ public class ManageUsers {
         return true;
     }
 
+    /**
+     * @param user the user, whose password we want to change
+     * @param newPassword the new password that will replace the current one
+     * @return the newly updated user
+     */
     public User updatePassword(User user, String newPassword){
         user.setPassword(newPassword);
         return userRepository.save(user);
     }
 
+    /**
+     * @param oldMail the current mail of the user
+     * @param newMail the new mail that will replace the current one
+     * @return the newly updated user
+     * @throws IllegalArgumentException if a user with the new mail already exists, or if no user with the old email is found
+     */
     public User updateUserMail(String oldMail, String newMail){
         Optional<User> maybeUser = userRepository.findByMailAddress(newMail);
 

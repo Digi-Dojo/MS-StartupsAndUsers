@@ -5,9 +5,7 @@ public class UpdateStartupNameDTO {
     private String oldName;
     private String newName;
 
-    public UpdateStartupNameDTO(String oldName, String newName) {
-        this.oldName = oldName;
-        this.newName = newName;
+    public UpdateStartupNameDTO() {
     }
 
     public String getOldName() {

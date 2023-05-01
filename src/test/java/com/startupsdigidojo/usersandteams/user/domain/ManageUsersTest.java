@@ -51,7 +51,9 @@ public class ManageUsersTest {
         User user = new User("testUser", "testUser@testmail.com", "testPassword");
         when(userRepository.findByMailAddress(anyString())).thenReturn(Optional.of(new User("testUser", "testUser@testmail.com", "testPassword" )));
 
-        assertThatThrownBy(() -> underTest.createUser(user.getName(), user.getMailAddress(), user.getPassword())).isInstanceOf(IllegalArgumentException.class);
+        assertThatThrownBy(() -> underTest.createUser(user.getName(), user.getMailAddress(), user.getPassword()))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("A user already exists with this mail address");;
     }
 
     @Test
@@ -78,18 +80,18 @@ public class ManageUsersTest {
 
         User u = new User(userName, userMail, userOldPassword);
         when(userRepository.save(u)).thenThrow(new IllegalArgumentException());
-        assertThatThrownBy(() -> underTest.updatePassword(u, userNewPassword)).isInstanceOf(IllegalArgumentException.class);
+        assertThatThrownBy(() -> underTest.updatePassword(u, userNewPassword))
+                .isInstanceOf(IllegalArgumentException.class);
     }
 
     @Test
     public void deleteUserThrowsExceptionForNonExistingUser() {
-
-        String userName = "testUser";
         String userMail = "TestUser@testmail.com";
-        String userPassword = "testPassword";
 
         when(userRepository.findByMailAddress(anyString())).thenReturn(Optional.empty());
-        assertThatThrownBy(() -> underTest.deleteUser(userMail)).isInstanceOf(IllegalArgumentException.class);
+        assertThatThrownBy(() -> underTest.deleteUser(userMail))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("User doesn't exist");
     }
 
     @Test
@@ -97,15 +99,19 @@ public class ManageUsersTest {
         User user = new User("testUser", "testUser@testmail.com", "testPassword");
         when(userRepository.findByMailAddress(anyString())).thenReturn(Optional.of(new User("testUser", "testUser@testmail.com", "testPassword" )));
 
-        assertThatThrownBy(() -> underTest.updateUserMail(user.getMailAddress(), user.getMailAddress())).isInstanceOf(IllegalArgumentException.class);
+        assertThatThrownBy(() -> underTest.updateUserMail(user.getMailAddress(), user.getMailAddress()))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("User with mail address testUser@testmail.com already exists");
     }
 
     @Test
     public void UpdatesMailAddressThrowsExceptionForNonExistingOldMailAddress() {
         User user = new User("testUser", "testUser@testmail.com", "testPassword");
-        when(userRepository.findByMailAddress(anyString())).thenReturn(Optional.of(new User("testUser", "testUser@testmail.com", "testPassword" )));
+        when(userRepository.findByMailAddress(anyString())).thenReturn(Optional.empty());
 
-        assertThatThrownBy(() -> underTest.updateUserMail("NonExistingMail", user.getMailAddress())).isInstanceOf(IllegalArgumentException.class);
+        assertThatThrownBy(() -> underTest.updateUserMail("NonExistingMail", user.getMailAddress()))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("User with mail address NonExistingMail does not exist");
     }
 
     private Long randomPositiveLong() {

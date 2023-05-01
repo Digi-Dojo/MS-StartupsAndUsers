@@ -9,12 +9,6 @@ public class CreateTeamMemberDTO {
     public CreateTeamMemberDTO() {
     }
 
-    public CreateTeamMemberDTO(Long userId, String role, Long startupId) {
-        this.userId = userId;
-        this.role = role;
-        this.startupId = startupId;
-    }
-
     public Long getUserId() {
         return userId;
     }

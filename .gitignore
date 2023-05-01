@@ -44,3 +44,7 @@ gradle-app.setting
 !gradle-wrapper.properties
 # Cache of project
 .gradletasknamecache
+# TestCoverageReport
+coverageReport
+# Javadoc folder
+javadocumentation

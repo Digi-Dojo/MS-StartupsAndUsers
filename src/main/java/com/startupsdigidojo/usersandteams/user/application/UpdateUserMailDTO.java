@@ -5,9 +5,7 @@ public class UpdateUserMailDTO {
     private String oldMail;
     private String newMail;
 
-    UpdateUserMailDTO(String oldMail, String newMail) {
-        this.oldMail = oldMail;
-        this.newMail = newMail;
+    public UpdateUserMailDTO() {
     }
 
     public String getOldMail() {

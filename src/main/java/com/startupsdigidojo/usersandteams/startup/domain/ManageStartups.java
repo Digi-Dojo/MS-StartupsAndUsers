@@ -5,6 +5,9 @@ import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
+/**
+ * Service class that serves to manage actions performed on startups
+ */
 @Service
 public class ManageStartups {
 
@@ -15,6 +18,13 @@ public class ManageStartups {
         this.startupRepository = startupRepository;
     }
 
+    /**
+     * Given a name and a description, this method creates a startup with said characteristics
+     * @param name the name of the startup
+     * @param description the description of the startup
+     * @return the newly created startup
+     * @throws IllegalArgumentException if a startup with the given name already exists
+     */
     public Startup createStartup(String name, String description) {
 
         Optional<Startup> maybeStartup = startupRepository.findByName(name);
@@ -26,6 +36,13 @@ public class ManageStartups {
         return startupRepository.save(new Startup(name, description));
     }
 
+    /**
+     * Given the current name of a startup and a new name, this method replaces the old name with the new one
+     * @param oldName current name of the startup whose name we want to change
+     * @param newName the name that should replace the current one
+     * @return the newly updated startup
+     * @throws IllegalArgumentException if a startup with the new name already exists, or if no startup with the old name is found
+     */
     public Startup updateStartupName(String oldName, String newName){
         Optional<Startup> maybeStartup = startupRepository.findByName(newName);
 
@@ -42,6 +59,13 @@ public class ManageStartups {
         return startupRepository.save(startup);
     }
 
+    /**
+     * Given the name of a startup, this method replaces its current description with the one provided
+     * @param name name of the startup
+     * @param description new description that will substitute the old
+     * @return the newly updated startup
+     * @throws IllegalArgumentException if no startup with the provided name is found
+     */
     public Startup updateStartupDescription(String name, String description){
         Optional<Startup> maybeStartup = startupRepository.findByName(name);
 
@@ -54,6 +78,11 @@ public class ManageStartups {
         return startupRepository.save(startup);
     }
 
+    /**
+     *<p>Given the name of a startup, this methods deletes the instance of said startup from the database</p>
+     * @param name name of the startup to be deleted
+     * @throws IllegalArgumentException if no startup with such name is found
+     */
     public void deleteStartup(String name){
         Optional<Startup> maybeStartup = startupRepository.findByName(name);
 
