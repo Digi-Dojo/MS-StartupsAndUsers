@@ -28,8 +28,12 @@ public class TeamMemberController {
         return manageTeamMember.findByUserIdAndStartupId(dto.getUserId(), dto.getStartupId());
     }
 
+//    @GetMapping("/startup/getAllUsers")
+//    public List<User> findAllUsersByStartupId(@RequestBody FindUsersByStartupIdDTO dto){
+//        return manageTeamMember.findUsersByStartupId(dto.getId());
+//    }
 
-    @GetMapping("/startup/{startupId}")
+    @GetMapping("/startup/getAllUsers/{startupId}")
     public List<User> findUsersByStartupId(@PathVariable("startupId") Long startupId) {return manageTeamMember.findUsersByStartupId(startupId);}
 
     @PostMapping("/create")
