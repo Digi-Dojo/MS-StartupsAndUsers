@@ -45,24 +45,63 @@ public class StartupControllerIntegrationTest {
                         .contentType("application/json")
                         .content("{\"name\":\"DigiDojo\",\"description\":\"a fun way to create startups\"}"))
                 .andExpect(status().isOk());
-        mockMvc.perform(get("/v1/startup/name/DigiDojo"))
+        getByName("DigiDojo");
+        deleteStartupA();
+    }
+
+    @Test
+    public void getMappingFindByNameShouldReturnTheStartupWithTheSpecifiedName() throws Exception {
+        String startupNameA = new JSONObject(generateStartupA().getResponse().getContentAsString()).getString("name");
+        String startupNameB = new JSONObject(generateStartupB().getResponse().getContentAsString()).getString("name");
+        JSONObject result = new JSONObject(mockMvc.perform(get("/v1/startup/name/DigiDojo"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.name").value("DigiDojo"));
-        mockMvc.perform(delete("/v1/startup/delete")
+                .andExpect(jsonPath("$.name").value("DigiDojo"))
+                .andReturn()
+                .getResponse()
+                .getContentAsString());
+        assertEquals(startupNameA, result.getString("name"));
+        assertNotEquals(startupNameB, result.getString("name"));
+        deleteStartupA();
+        deleteStartupB();
+    }
+
+    @Test
+    public void postMappingUpdateStartupNameShouldUpdateTheNameOfTheStartup() throws Exception {
+        JSONObject startup = new JSONObject(generateStartupA().getResponse().getContentAsString());
+        String oldName = startup.getString("name");
+        mockMvc.perform(post("/v1/startup/updateName")
                         .contentType("application/json")
-                        .content("{\"name\":\"DigiDojo\",\"description\":\"a fun way to create startups\"}"))
+                        .content("{\"oldName\":\"" + oldName + "\",\"newName\":\"NewDigiDojo\"}"))
                 .andExpect(status().isOk());
+        startup = new JSONObject(getByName("NewDigiDojo"));
+        String newName = startup.getString("name"); //it gets DigiDojo instead of NewDigiDojo
+        assertEquals("NewDigiDojo", startup.getString("name"));
+        deleteAfterNameUpdate();
+    }
+
+    @Test
+    public void postMappingUpdateStartupDescriptionShouldUpdateTheDescriptionOfTheStartup() throws Exception {
+        JSONObject startup = new JSONObject(generateStartupA().getResponse().getContentAsString());
+        String oldName = startup.getString("name");
+        mockMvc.perform(post("/v1/startup/updateDescription")
+                        .contentType("application/json")
+                        .content("{\"oldName\":\"" + oldName + "\",\"newName\":\"NewDigiDojo\"}"))
+                .andExpect(status().isOk());
+        startup = new JSONObject(getByName("NewDigiDojo"));
+        String newName = startup.getString("name"); //it gets DigiDojo instead of NewDigiDojo
+        assertEquals("NewDigiDojo", startup.getString("name"));
+        deleteAfterNameUpdate();
     }
 
     //need to decide whether to check only the id (like in the team member int test) or all the fields
     //to keep the code consistent
     @Test
     public void getMappingGetAllShouldReturnAllStartups() throws Exception {
-        MvcResult result1 = mockMvc.perform(post("/v1/startup/create")
+        MvcResult result = mockMvc.perform(post("/v1/startup/create")
                         .contentType("application/json")
                         .content("{\"name\":\"DigiDojo\",\"description\":\"a fun way to create startups\"}"))
                 .andReturn();
-        JSONObject object1 = new JSONObject(result1.getResponse().getContentAsString());
+        JSONObject object1 = new JSONObject(result.getResponse().getContentAsString());
         Long startupId1 = object1.getLong("id");
         MvcResult result2 = mockMvc.perform(post("/v1/startup/create")
                         .contentType("application/json")
@@ -82,16 +121,53 @@ public class StartupControllerIntegrationTest {
         assertEquals(startupId2, object3.getLong("id"));
         assertEquals("LessSuccessfulStartup", object3.getString("name"));
         assertEquals("DigiDojo is better", object3.getString("description"));
+        deleteStartupA();
+        deleteStartupB();
+    }
+
+    private MvcResult generateStartupA() throws Exception {
+        return mockMvc.perform(post("/v1/startup/create")
+                        .contentType("application/json")
+                        .content("{\"name\":\"DigiDojo\",\"description\":\"a fun way to create startups\"}"))
+                .andExpect(status().isOk())
+                .andReturn();
+    }
+
+    private MvcResult generateStartupB() throws Exception {
+        return mockMvc.perform(post("/v1/startup/create")
+                        .contentType("application/json")
+                        .content("{\"name\":\"LessSuccessfulStartup\",\"description\":\"DigiDojo is better\"}"))
+                .andExpect(status().isOk())
+                .andReturn();
+    }
+
+    private String getByName(String name) throws Exception {
+        return mockMvc.perform(get("/v1/startup/name/{name}", name))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.name").value(name))
+                .andReturn()
+                .getResponse()
+                .getContentAsString();
+    }
+
+    private void deleteStartupA() throws Exception {
         mockMvc.perform(delete("/v1/startup/delete")
                         .contentType("application/json")
                         .content("{\"name\":\"DigiDojo\"}"))
-                .andDo(print())
                 .andExpect(status().isOk());
+    }
+
+    private void deleteStartupB() throws Exception {
         mockMvc.perform(delete("/v1/startup/delete")
                         .contentType("application/json")
                         .content("{\"name\":\"LessSuccessfulStartup\"}"))
                 .andExpect(status().isOk());
     }
 
-
+    public void deleteAfterNameUpdate() throws Exception {
+        mockMvc.perform(delete("/v1/startup/delete")
+                        .contentType("application/json")
+                        .content("{\"name\":\"NewDigiDojo\"}"))
+                .andExpect(status().isOk());
+    }
 }

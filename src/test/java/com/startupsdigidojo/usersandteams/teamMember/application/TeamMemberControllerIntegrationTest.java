@@ -38,85 +38,32 @@ public class TeamMemberControllerIntegrationTest {
 
     @Test
     public void postMappingCreatesTeamMember() throws Exception {
-        MvcResult result = mockMvc.perform(post("/v1/startup/create")
-                        .contentType("application/json")
-                        .content("{\"name\":\"DigiDojo\",\"description\":\"a fun way to create startups\"}"))
-                .andReturn();
-        JSONObject object = new JSONObject(result.getResponse().getContentAsString());
-        Long startupId = object.getLong("id");
-        MvcResult result1 = mockMvc.perform(post("/v1/users/create")
-                        .contentType("application/json")
-                        .content("{\"name\":\"Ernald\",\"mailAddress\":\"enrami@unibz.org\",\"password\":\"passwordErnald\"}"))
-                .andReturn();
-        JSONObject object1 = new JSONObject(result1.getResponse().getContentAsString());
-        Long userId = object1.getLong("id");
-        MvcResult result2 = mockMvc.perform(post("/v1/teammembers/create")
-                .contentType("application/json")
-                .content("{\"userId\":\"" + userId + "\",\"role\":\"designer\",\"startupId\":\"" + startupId + "\" }"))
-                .andExpect(status().isOk())
-                .andReturn();
-        JSONObject object2 = new JSONObject(result2.getResponse().getContentAsString());
-        Long teamMemberId = object2.getLong("id");
+        Long startupId = new JSONObject(generateStartup().getResponse().getContentAsString()).getLong("id");
+        Long userId = new JSONObject(generateUser1().getResponse().getContentAsString()).getLong("id");
+        Long teamMemberId = new JSONObject(generateTeamMember(startupId, userId).getResponse().getContentAsString()).getLong("id");
         mockMvc.perform(get("/v1/teammembers/findByUSIds")
                 .contentType("application/json")
                 .content("{\"userId\":\"" + userId + "\",\"startupId\":\"" + startupId + "\" }"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(teamMemberId));
-        mockMvc.perform(delete("/v1/teammembers/delete")
-                        .contentType("application/json")
-                        .content("{\"id\":\"" + teamMemberId + "\"}"))
-                .andExpect(status().isOk());
+        deleteTeamMember(teamMemberId);
         mockMvc.perform(get("/v1/teammembers/findByUSIds")
                         .contentType("application/json")
                         .content("{\"userId\":\"" + userId + "\",\"startupId\":\"" + startupId + "\" }"))
                 .andExpect(status().isBadRequest());
-        mockMvc.perform(delete("/v1/startup/delete")
-                        .contentType("application/json")
-                        .content("{\"name\":\"DigiDojo\",\"description\":\"a fun way to create startups\"}"))
-                .andExpect(status().isOk());
-        mockMvc.perform(delete("/v1/users/delete")
-                        .contentType("application/json")
-                        .content("{\"mailAddress\":\"enrami@unibz.org\"}"))
-                .andExpect(status().isOk());
+        deleteStartup();
+        deleteUser1();
     }
 
     @Test
     public void getMappingWithStartupIdReturnsUsersList() throws Exception{
+        Long startupId = new JSONObject(generateStartup().getResponse().getContentAsString()).getLong("id");
         Long[] userIds = new Long[2];
-        userIds[0] = new JSONObject(mockMvc.perform(post("/v1/users/create")
-                        .contentType("application/json")
-                        .content("{\"name\":\"Ernald\",\"mailAddress\":\"enrami@unibz.org\",\"password\":\"passwordErnald\"}"))
-                .andExpect(status().isOk())
-                .andReturn()
-                .getResponse()
-                .getContentAsString())
-                .getLong("id");
-        userIds[1] = new JSONObject(mockMvc.perform(post("/v1/users/create")
-                        .contentType("application/json")
-                        .content("{\"name\":\"Gianluca\",\"mailAddress\":\"gianluco@bruco.org\",\"password\":\"passwordBruco\"}"))
-                .andExpect(status().isOk())
-                .andReturn()
-                .getResponse()
-                .getContentAsString())
-                .getLong("id");
-        Long startupId = new JSONObject(mockMvc.perform(post("/v1/startup/create")
-                        .contentType("application/json")
-                        .content("{\"name\":\"DigiDojo\",\"description\":\"a fun way to create startups\"}"))
-                .andExpect(status().isOk())
-                .andReturn()
-                .getResponse()
-                .getContentAsString())
-                .getLong("id");
+        userIds[0] = new JSONObject(generateUser1().getResponse().getContentAsString()).getLong("id");
+        userIds[1] = new JSONObject(generateUser2().getResponse().getContentAsString()).getLong("id");
         Long[] teamMemberIds = new Long[2];
         for(int i = 0; i < 2; i++){
-            teamMemberIds[i] = new JSONObject(mockMvc.perform(post("/v1/teammembers/create")
-                            .contentType("application/json")
-                            .content("{\"userId\":\"" + userIds[i] + "\",\"role\":\"designer\",\"startupId\":\"" + startupId + "\" }"))
-                    .andExpect(status().isOk())
-                    .andReturn()
-                    .getResponse()
-                    .getContentAsString())
-                    .getLong("id");
+            teamMemberIds[i] = new JSONObject(generateTeamMember(startupId, userIds[i]).getResponse().getContentAsString()).getLong("id");
         }
         JSONArray users = new JSONArray(mockMvc.perform(get("/v1/teammembers/startup/{startupId}", startupId))
                 .andExpect(status().isOk())
@@ -127,139 +74,45 @@ public class TeamMemberControllerIntegrationTest {
             assertEquals(userIds[i],users.getJSONObject(i).getLong("id"));
         }
         for (int i = 0; i < 2; i++){
-            mockMvc.perform(delete("/v1/teammembers/delete")
-                            .contentType("application/json")
-                            .content("{\"id\":\"" + teamMemberIds[i] + "\"}"))
-                    .andExpect(status().isOk());
+            deleteTeamMember(teamMemberIds[i]);
         }
-        mockMvc.perform(delete("/v1/users/delete")
-                        .contentType("application/json")
-                        .content("{\"mailAddress\":\"enrami@unibz.org\"}"))
-                .andExpect(status().isOk());
-        mockMvc.perform(delete("/v1/users/delete")
-                        .contentType("application/json")
-                        .content("{\"mailAddress\":\"gianluco@bruco.org\"}"))
-                .andExpect(status().isOk());
-        mockMvc.perform(delete("/v1/startup/delete")
-                        .contentType("application/json")
-                        .content("{\"name\":\"DigiDojo\",\"description\":\"a fun way to create startups\"}"))
-                .andExpect(status().isOk());
+        deleteUser1();
+        deleteUser2();
+        deleteStartup();
     }
 
     @Test
     public void deleteMappingShouldDeleteTeamMember() throws Exception{
-        long startupId;
-        long teamMemberId;
-        long userId;
-
-        userId = new JSONObject(mockMvc.perform(post("/v1/users/create")
-                        .contentType("application/json")
-                        .content("{\"name\":\"Gianluca\",\"mailAddress\":\"gianluco@bruco.org\",\"password\":\"passwordBruco\"}"))
-                .andExpect(status().isOk())
-                .andReturn()
-                .getResponse()
-                .getContentAsString())
-                .getLong("id");
-        startupId = new JSONObject(mockMvc.perform(post("/v1/startup/create")
-                        .contentType("application/json")
-                        .content("{\"name\":\"DigiDojo\",\"description\":\"a fun way to create startups\"}"))
-                .andExpect(status().isOk())
-                .andReturn()
-                .getResponse()
-                .getContentAsString())
-                .getLong("id");
-        teamMemberId = new JSONObject(mockMvc.perform(post("/v1/teammembers/create")
-                            .contentType("application/json")
-                            .content("{\"userId\":\"" + userId + "\",\"role\":\"designer\",\"startupId\":\"" + startupId + "\" }"))
-                    .andExpect(status().isOk())
-                    .andReturn()
-                    .getResponse()
-                    .getContentAsString())
-                    .getLong("id");
-        mockMvc.perform(delete("/v1/teammembers/delete")
-                        .contentType("application/json")
-                        .content("{\"id\":\"" + teamMemberId + "\"}"))
-                .andExpect(status().isOk());
-        mockMvc.perform(delete("/v1/users/delete")
-                        .contentType("application/json")
-                        .content("{\"mailAddress\":\"gianluco@bruco.org\"}"))
-                .andExpect(status().isOk());
-        mockMvc.perform(delete("/v1/startup/delete")
-                        .contentType("application/json")
-                        .content("{\"name\":\"DigiDojo\",\"description\":\"a fun way to create startups\"}"))
-                .andExpect(status().isOk());
+        Long userId = new JSONObject(generateUser2().getResponse().getContentAsString()).getLong("id");
+        Long startupId = new JSONObject(generateStartup().getResponse().getContentAsString()).getLong("id");
+        Long teamMemberId = new JSONObject(generateTeamMember(startupId, userId).getResponse().getContentAsString()).getLong("id");
+        deleteTeamMember(teamMemberId);
+        deleteUser2();
+        deleteStartup();
     }
 
     @Test
     public void getMappingWithIdReturnsTeamMemberWithSpecifiedId() throws Exception{
-        Long userIds;
-        userIds = new JSONObject(mockMvc.perform(post("/v1/users/create")
-                        .contentType("application/json")
-                        .content("{\"name\":\"Gianluca\",\"mailAddress\":\"gianluco@bruco.org\",\"password\":\"passwordBruco\"}"))
-                .andExpect(status().isOk())
-                .andReturn()
-                .getResponse()
-                .getContentAsString())
-                .getLong("id");
-        Long startupId = new JSONObject(mockMvc.perform(post("/v1/startup/create")
-                        .contentType("application/json")
-                        .content("{\"name\":\"DigiDojo\",\"description\":\"a fun way to create startups\"}"))
-                .andExpect(status().isOk())
-                .andReturn()
-                .getResponse()
-                .getContentAsString())
-                .getLong("id");
-        Long teamMember1Id;
-        teamMember1Id = new JSONObject(mockMvc.perform(post("/v1/teammembers/create")
-                    .contentType("application/json")
-                    .content("{\"userId\":\"" + userIds + "\",\"role\":\"designer\",\"startupId\":\"" + startupId + "\" }"))
-                .andExpect(status().isOk())
-                .andReturn()
-                .getResponse()
-                .getContentAsString())
-                .getLong("id");
-
+        Long userIds = new JSONObject(generateUser2().getResponse().getContentAsString()).getLong("id");
+        Long startupIds = new JSONObject(generateStartup().getResponse().getContentAsString()).getLong("id");
+        Long teamMember1Id = new JSONObject(generateTeamMember(startupIds, userIds).getResponse().getContentAsString()).getLong("id");
         JSONObject teamMembers = new JSONObject(mockMvc.perform(get("/v1/teammembers/{Id}", teamMember1Id))
                 .andExpect(status().isOk())
                 .andReturn()
                 .getResponse()
                 .getContentAsString());
         assertEquals(teamMember1Id,teamMembers.getLong("id"));
-        mockMvc.perform(delete("/v1/teammembers/delete")
-                    .contentType("application/json")
-                    .content("{\"id\":\"" + teamMember1Id + "\"}"))
-                .andExpect(status().isOk());
-        mockMvc.perform(delete("/v1/users/delete")
-                        .contentType("application/json")
-                        .content("{\"mailAddress\":\"gianluco@bruco.org\"}"))
-                .andExpect(status().isOk());
-        mockMvc.perform(delete("/v1/startup/delete")
-                        .contentType("application/json")
-                        .content("{\"name\":\"DigiDojo\",\"description\":\"a fun way to create startups\"}"))
-                .andExpect(status().isOk());
+        deleteTeamMember(teamMember1Id);
+        deleteUser2();
+        deleteStartup();
     }
 
     @Test
     public void postMappingUpdateTeamMemberRoleUpdatesTheRole() throws Exception {
-        MvcResult result = mockMvc.perform(post("/v1/startup/create")
-                        .contentType("application/json")
-                        .content("{\"name\":\"DigiDojo\",\"description\":\"a fun way to create startups\"}"))
-                .andReturn();
-        JSONObject object = new JSONObject(result.getResponse().getContentAsString());
-        Long startupId = object.getLong("id");
-        MvcResult result1 = mockMvc.perform(post("/v1/users/create")
-                        .contentType("application/json")
-                        .content("{\"name\":\"Ernald\",\"mailAddress\":\"enrami@unibz.org\",\"password\":\"passwordErnald\"}"))
-                .andReturn();
-        JSONObject object1 = new JSONObject(result1.getResponse().getContentAsString());
-        Long userId = object1.getLong("id");
-        MvcResult result2 = mockMvc.perform(post("/v1/teammembers/create")
-                        .contentType("application/json")
-                        .content("{\"userId\":\"" + userId + "\",\"role\":\"designer\",\"startupId\":\"" + startupId + "\" }"))
-                .andExpect(status().isOk())
-                .andReturn();
-        JSONObject object2 = new JSONObject(result2.getResponse().getContentAsString());
-        Long teamMemberId = object2.getLong("id");
+        Long startupId = new JSONObject(generateStartup().getResponse().getContentAsString()).getLong("id");
+        Long userId = new JSONObject(generateUser1().getResponse().getContentAsString()).getLong("id");
+        Long teamMemberId = new JSONObject(generateTeamMember(startupId, userId).getResponse().getContentAsString()).getLong("id");
+
         mockMvc.perform(post("/v1/teammembers/update")
                 .contentType("application/json")
                 .content("{\"id\":\"" + teamMemberId + "\",\"newRole\":\"programmer\"}"))
@@ -270,21 +123,72 @@ public class TeamMemberControllerIntegrationTest {
                 .getResponse()
                 .getContentAsString());
         assertEquals("programmer", teamMembers.get("role"));
+        deleteTeamMember(teamMemberId);
+        deleteStartup();
+        deleteUser1();
+    }
+
+    private MvcResult generateTeamMember(Long startupId, Long userId) throws Exception {
+        MvcResult result2 = mockMvc.perform(post("/v1/teammembers/create")
+                        .contentType("application/json")
+                        .content("{\"userId\":\"" + userId + "\",\"role\":\"designer\",\"startupId\":\"" + startupId + "\" }"))
+                .andExpect(status().isOk())
+                .andReturn();
+        return result2;
+    }
+
+    private MvcResult generateStartup() throws Exception {
+        MvcResult result = mockMvc.perform(post("/v1/startup/create")
+                        .contentType("application/json")
+                        .content("{\"name\":\"DigiDojo\",\"description\":\"a fun way to create startups\"}"))
+                .andExpect(status().isOk())
+                .andReturn();
+        return result;
+    }
+
+    private MvcResult generateUser1() throws Exception {
+        MvcResult result1 = mockMvc.perform(post("/v1/users/create")
+                        .contentType("application/json")
+                        .content("{\"name\":\"Ernald\",\"mailAddress\":\"enrami@unibz.org\",\"password\":\"passwordErnald\"}"))
+                .andExpect(status().isOk())
+                .andReturn();
+        return result1;
+    }
+
+    private MvcResult generateUser2() throws Exception {
+        MvcResult result2 = mockMvc.perform(post("/v1/users/create")
+                        .contentType("application/json")
+                        .content("{\"name\":\"Gianluca\",\"mailAddress\":\"gianluco@bruco.org\",\"password\":\"passwordBruco\"}"))
+                .andExpect(status().isOk())
+                .andReturn();
+        return result2;
+    }
+
+    private void deleteTeamMember(Long teamMember1Id) throws Exception {
         mockMvc.perform(delete("/v1/teammembers/delete")
                         .contentType("application/json")
-                        .content("{\"id\":\"" + teamMemberId + "\"}"))
+                        .content("{\"id\":\"" + teamMember1Id + "\"}"))
                 .andExpect(status().isOk());
-        mockMvc.perform(get("/v1/teammembers/findByUSIds")
-                        .contentType("application/json")
-                        .content("{\"userId\":\"" + userId + "\",\"startupId\":\"" + startupId + "\" }"))
-                .andExpect(status().isBadRequest());
+    }
+
+    private void deleteStartup() throws Exception {
         mockMvc.perform(delete("/v1/startup/delete")
                         .contentType("application/json")
                         .content("{\"name\":\"DigiDojo\",\"description\":\"a fun way to create startups\"}"))
                 .andExpect(status().isOk());
+    }
+
+    private void deleteUser1() throws Exception {
         mockMvc.perform(delete("/v1/users/delete")
                         .contentType("application/json")
                         .content("{\"mailAddress\":\"enrami@unibz.org\"}"))
+                .andExpect(status().isOk());
+    }
+
+    private void deleteUser2() throws Exception {
+        mockMvc.perform(delete("/v1/users/delete")
+                        .contentType("application/json")
+                        .content("{\"mailAddress\":\"gianluco@bruco.org\"}"))
                 .andExpect(status().isOk());
     }
 }

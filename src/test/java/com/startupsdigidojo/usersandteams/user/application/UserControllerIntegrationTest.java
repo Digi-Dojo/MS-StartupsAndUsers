@@ -35,17 +35,11 @@ public class UserControllerIntegrationTest {
 
     @Test
     public void getMappingWithEmailReturnsUserWithIndicatedEmail() throws Exception {
-        mockMvc.perform(post("/v1/users/create")
-                        .contentType("application/json")
-                        .content("{\"name\":\"Matteo\",\"mailAddress\":\"matteo.larcer@gmail.com\",\"password\":\"passwordMatteo\"}"))
-                .andExpect(status().isOk());
+        generateUser();
         mockMvc.perform(get("/v1/users/matteo.larcer@gmail.com"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.mailAddress").value("matteo.larcer@gmail.com"));
-        mockMvc.perform(delete("/v1/users/delete")
-                        .contentType("application/json")
-                        .content("{\"mailAddress\":\"matteo.larcer@gmail.com\"}"))
-                .andExpect(status().isOk());
+        deleteUser();
     }
 
     @Test
@@ -54,13 +48,8 @@ public class UserControllerIntegrationTest {
                 .contentType("application/json")
                 .content("{\"name\":\"Ernald\",\"mailAddress\":\"enrami@unibz.org\",\"password\":\"passwordErnald\"}"))
                 .andExpect(status().isOk());
-        mockMvc.perform(get("/v1/users/enrami@unibz.org"))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.mailAddress").value("enrami@unibz.org"));
-        mockMvc.perform(delete("/v1/users/delete")
-                .contentType("application/json")
-                .content("{\"mailAddress\":\"enrami@unibz.org\"}"))
-                .andExpect(status().isOk());
+        getUser1();
+        deleteUser1();
     }
 
     @Test
@@ -69,29 +58,73 @@ public class UserControllerIntegrationTest {
                         .contentType("application/json")
                         .content("{\"name\":\"Ernald\",\"mailAddress\":\"enrami@unibz.org\",\"password\":\"passwordErnald\"}"))
                 .andExpect(status().isOk());
-        mockMvc.perform(delete("/v1/users/delete")
-                        .contentType("application/json")
-                        .content("{\"mailAddress\":\"enrami@unibz.org\"}"))
-                .andExpect(status().isOk());
+        deleteUser1();
         mockMvc.perform(get("/v1/users/enrami@unibz.org"))
                 .andExpect(status().isBadRequest());
     }
 
     @Test
     public void postMappingUpdateUserMailUpdatesTheMail() throws Exception {
-        mockMvc.perform(post("/v1/users/create")
-                .contentType("application/json")
-                .content("{\"name\":\"Ernald\",\"mailAddress\":\"enrami@unibz.org\",\"password\":\"passwordErnald\"}"));
+        generateUser1();
         mockMvc.perform(post("/v1/users/updateMail")
                         .contentType("application/json")
                         .content("{\"oldMail\":\"enrami@unibz.org\",\"newMail\":\"enrami@unibz.it\"}"))
                         .andExpect(status().isOk());
-        mockMvc.perform(get("/v1/users/enrami@unibz.it"))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.mailAddress").value("enrami@unibz.it"))
-                .andExpect(jsonPath("$.name").value("Ernald"));
+        getUser1AfterUpdate();
         mockMvc.perform(get("/v1/users/enrami@unibz.org"))
                 .andExpect(status().isBadRequest());
+        deleteUser1AfterUpdate();
+    }
+
+    private void generateUser() throws Exception {
+        mockMvc.perform(post("/v1/users/create")
+                        .contentType("application/json")
+                        .content("{\"name\":\"Matteo\",\"mailAddress\":\"matteo.larcer@gmail.com\",\"password\":\"passwordMatteo\"}"))
+                .andExpect(status().isOk());
+    }
+
+    private void deleteUser() throws Exception {
+        mockMvc.perform(delete("/v1/users/delete")
+                        .contentType("application/json")
+                        .content("{\"mailAddress\":\"matteo.larcer@gmail.com\"}"))
+                .andExpect(status().isOk());
+    }
+
+    private void generateUser1() throws Exception {
+        mockMvc.perform(post("/v1/users/create")
+                        .contentType("application/json")
+                        .content("{\"name\":\"Ernald\",\"mailAddress\":\"enrami@unibz.org\",\"password\":\"passwordErnald\"}"))
+                .andExpect(status().isOk());
+    }
+
+    private void getUser1() throws Exception {
+        mockMvc.perform(get("/v1/users/enrami@unibz.org"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.mailAddress").value("enrami@unibz.org"));
+        controlGet("/v1/users/enrami@unibz.org", "Ernald", "enrami@unibz.org");
+    }
+
+    private void getUser1AfterUpdate() throws Exception {
+        mockMvc.perform(get("/v1/users/enrami@unibz.it"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.mailAddress").value("enrami@unibz.it"));
+        controlGet("/v1/users/enrami@unibz.it", "Ernald", "enrami@unibz.it");
+    }
+
+    private void controlGet(String urlTemp, String expectedName, String expectedMail) throws Exception {
+        mockMvc.perform(get(urlTemp)).andExpect(status().isOk())
+                .andExpect(jsonPath("$.mailAddress").value(expectedMail))
+                .andExpect(jsonPath("$.name").value(expectedName));
+    }
+
+    private void deleteUser1() throws Exception {
+        mockMvc.perform(delete("/v1/users/delete")
+                        .contentType("application/json")
+                        .content("{\"mailAddress\":\"enrami@unibz.org\"}"))
+                .andExpect(status().isOk());
+    }
+
+    private void deleteUser1AfterUpdate() throws Exception {
         mockMvc.perform(delete("/v1/users/delete")
                         .contentType("application/json")
                         .content("{\"mailAddress\":\"enrami@unibz.it\"}"))
