@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@CrossOrigin(origins = "https://mfront-startupsandusers.onrender.com/")
 @RestController
 @RequestMapping(path = "/v1/teammembers")
 public class TeamMemberController {

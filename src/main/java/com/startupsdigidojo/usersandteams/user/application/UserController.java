@@ -7,6 +7,7 @@ import com.startupsdigidojo.usersandteams.user.domain.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+@CrossOrigin(origins = "https://mfront-startupsandusers.onrender.com/")
 @RestController
 @RequestMapping(path = "/v1/users")
 public class UserController {
