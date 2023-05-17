@@ -18,7 +18,7 @@ public class UsersAndTeamsApplication {
         return new WebMvcConfigurer() {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
-                registry.addMapping("/**").allowedOrigins("http://localhost:3000", "https://sddl-startupsandusers.onrender.com", "https://mfront-startupsandusers.onrender.com");
+                registry.addMapping("/**").allowedOrigins("http://localhost:3000", "https://startup-digi-dojo-lab.onrender.com", "https://mfront-startupsandusers.onrender.com");
             }
         };
     }
