@@ -23,9 +23,8 @@ public class User {
     @Column(unique = true)
     private String mailAddress;
 
-    //Todo: maybe hash it or something first to improve security
-
     private String password;
+
     public Long getId() {
         return id;
     }

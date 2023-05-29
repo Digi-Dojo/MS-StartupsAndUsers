@@ -11,6 +11,9 @@ public class ManageUsers {
     private final UserRepository userRepository;
 
     @Autowired
+    private Broadcaster broadcaster;
+
+    @Autowired
     public ManageUsers(UserRepository userRepository){
         this.userRepository = userRepository;
     }
@@ -29,7 +32,11 @@ public class ManageUsers {
             throw new IllegalArgumentException("A user already exists with this mail address");
         }
 
-        return userRepository.save(new User(name, mailAddress, password));
+        User user = new User(name, mailAddress, password);
+
+        broadcaster.emitNewUser(user);
+
+        return userRepository.save(user);
     }
 
     /**
