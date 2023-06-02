@@ -14,6 +14,9 @@ public class ManageStartups {
     private final StartupRepository startupRepository;
 
     @Autowired
+    private StartupBroadcaster startupBroadcaster;
+
+    @Autowired
     public ManageStartups(StartupRepository startupRepository) {
         this.startupRepository = startupRepository;
     }
@@ -33,7 +36,11 @@ public class ManageStartups {
             throw new IllegalArgumentException("Startup with name " + name + " already exists");
         }
 
-        return startupRepository.save(new Startup(name, description));
+        Startup startup = new Startup(name, description);
+
+        startupBroadcaster.emitNewStartup(startup);
+
+        return startupRepository.save(startup);
     }
 
     /**
