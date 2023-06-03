@@ -1,5 +1,5 @@
 package com.startupsdigidojo.usersandteams.user.domain;
 
-public interface Broadcaster {
+public interface UserBroadcaster {
     void emitNewUser(User user);
 }

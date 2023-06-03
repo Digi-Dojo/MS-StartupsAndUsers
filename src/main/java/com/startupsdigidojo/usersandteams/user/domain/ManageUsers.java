@@ -10,31 +10,31 @@ public class ManageUsers {
 
     private final UserRepository userRepository;
 
-    @Autowired
-    private Broadcaster broadcaster;
+    private final UserBroadcaster userBroadcaster;
 
     @Autowired
-    public ManageUsers(UserRepository userRepository){
+    public ManageUsers(UserRepository userRepository, UserBroadcaster userBroadcaster) {
         this.userRepository = userRepository;
+        this.userBroadcaster = userBroadcaster;
     }
 
     /**
-     * @param name name of the user
+     * @param name        name of the user
      * @param mailAddress mail address of the user
-     * @param password password of the user
+     * @param password    password of the user
      * @return the newly created user
      * @throws IllegalArgumentException if a user with the provided mail address already exists
      */
-    public User createUser(String name, String mailAddress, String password){
+    public User createUser(String name, String mailAddress, String password) {
         Optional<User> maybeUser = userRepository.findByMailAddress(mailAddress);
 
-        if(maybeUser.isPresent()){
+        if (maybeUser.isPresent()) {
             throw new IllegalArgumentException("A user already exists with this mail address");
         }
 
         User user = userRepository.save(new User(name, mailAddress, password));
 
-        broadcaster.emitNewUser(user);
+        userBroadcaster.emitNewUser(user);
 
         return user;
     }
@@ -44,10 +44,10 @@ public class ManageUsers {
      * @return true if the operation is successful
      * @throws IllegalArgumentException if no user with the provided mail address is found
      */
-    public boolean deleteUser(String mailAddress){
+    public boolean deleteUser(String mailAddress) {
         Optional<User> maybeUser = userRepository.findByMailAddress(mailAddress);
 
-        if(maybeUser.isEmpty()){
+        if (maybeUser.isEmpty()) {
             throw new IllegalArgumentException("User doesn't exist");
         }
 
@@ -57,11 +57,11 @@ public class ManageUsers {
     }
 
     /**
-     * @param user the user, whose password we want to change
+     * @param user        the user, whose password we want to change
      * @param newPassword the new password that will replace the current one
      * @return the newly updated user
      */
-    public User updatePassword(User user, String newPassword){
+    public User updatePassword(User user, String newPassword) {
         user.setPassword(newPassword);
         return userRepository.save(user);
     }
@@ -72,7 +72,7 @@ public class ManageUsers {
      * @return the newly updated user
      * @throws IllegalArgumentException if a user with the new mail already exists, or if no user with the old email is found
      */
-    public User updateUserMail(String oldMail, String newMail){
+    public User updateUserMail(String oldMail, String newMail) {
         Optional<User> maybeUser = userRepository.findByMailAddress(newMail);
 
         if (maybeUser.isPresent()) {
@@ -80,7 +80,7 @@ public class ManageUsers {
         }
 
         maybeUser = userRepository.findByMailAddress(oldMail);
-        if(maybeUser.isEmpty()){
+        if (maybeUser.isEmpty()) {
             throw new IllegalArgumentException("User with mail address " + oldMail + " does not exist");
         }
         User user = maybeUser.get();

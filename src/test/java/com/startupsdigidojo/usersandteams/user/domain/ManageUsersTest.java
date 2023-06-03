@@ -22,9 +22,12 @@ public class ManageUsersTest {
     @Mock
     private UserRepository userRepository;
 
+    @Mock
+    private UserBroadcaster userBroadcaster;
+
     @BeforeEach
     void setUp() {
-        underTest = new ManageUsers(userRepository);
+        underTest = new ManageUsers(userRepository, userBroadcaster);
     }
 
     @Test
@@ -32,9 +35,9 @@ public class ManageUsersTest {
 
         User user = new User("testUser", "TestUser@testmail.com", "testPassword");
         when(userRepository.findByMailAddress(anyString())).thenReturn(Optional.empty());
-        when(userRepository.save(any())).thenReturn(new User(user.getName(),user.getMailAddress(),user.getPassword()));
+        when(userRepository.save(any())).thenReturn(new User(user.getName(), user.getMailAddress(), user.getPassword()));
 
-        User effect = underTest.createUser(user.getName(),user.getMailAddress(),user.getPassword());
+        User effect = underTest.createUser(user.getName(), user.getMailAddress(), user.getPassword());
         effect.setId(randomPositiveLong());
 
         assertThat(effect).isInstanceOf(User.class);
@@ -49,11 +52,12 @@ public class ManageUsersTest {
     public void createUserThrowsExceptionForExistingUser() {
 
         User user = new User("testUser", "testUser@testmail.com", "testPassword");
-        when(userRepository.findByMailAddress(anyString())).thenReturn(Optional.of(new User("testUser", "testUser@testmail.com", "testPassword" )));
+        when(userRepository.findByMailAddress(anyString())).thenReturn(Optional.of(new User("testUser", "testUser@testmail.com", "testPassword")));
 
         assertThatThrownBy(() -> underTest.createUser(user.getName(), user.getMailAddress(), user.getPassword()))
                 .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("A user already exists with this mail address");;
+                .hasMessage("A user already exists with this mail address");
+        ;
     }
 
     @Test
@@ -97,7 +101,7 @@ public class ManageUsersTest {
     @Test
     public void UpdatesMailAddressThrowsExceptionForAlreadyExistingNewMailAddress() {
         User user = new User("testUser", "testUser@testmail.com", "testPassword");
-        when(userRepository.findByMailAddress(anyString())).thenReturn(Optional.of(new User("testUser", "testUser@testmail.com", "testPassword" )));
+        when(userRepository.findByMailAddress(anyString())).thenReturn(Optional.of(new User("testUser", "testUser@testmail.com", "testPassword")));
 
         assertThatThrownBy(() -> underTest.updateUserMail(user.getMailAddress(), user.getMailAddress()))
                 .isInstanceOf(IllegalArgumentException.class)
