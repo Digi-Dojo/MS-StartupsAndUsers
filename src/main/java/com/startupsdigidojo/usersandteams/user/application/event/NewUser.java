@@ -3,7 +3,7 @@ package com.startupsdigidojo.usersandteams.user.application.event;
 import com.startupsdigidojo.usersandteams.user.domain.User;
 import lombok.Getter;
 
-public class NewUser extends Event{
+public class NewUser extends UserEvent {
     public static final String NEW_USER = "New User";
 
     @Getter
@@ -20,7 +20,7 @@ public class NewUser extends Event{
         return "{" +
                     "\"type\": \"" + type + "\"," +
                     "\"payload\": {" +
-                        "\"uuid\": \"" + payload.getId() + "\"," +
+                        "\"id\": \"" + payload.getId() + "\"," +
                         "\"name\": \"" + payload.getName() + "\"," +
                         "\"mailAddress\": \"" + payload.getMailAddress() + "\"," +
                         "\"time\": \"" + System.currentTimeMillis() + "\"" +

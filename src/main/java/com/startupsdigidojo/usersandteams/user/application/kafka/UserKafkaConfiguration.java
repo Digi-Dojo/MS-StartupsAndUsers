@@ -12,7 +12,7 @@ import org.springframework.kafka.core.ProducerFactory;
 import java.util.Map;
 
 @Configuration
-public class KafkaConfiguration {
+public class UserKafkaConfiguration {
     @Value("${spring.kafka.properties.bootstrap.servers}")
     private String bootstrapServers;
 
@@ -26,7 +26,7 @@ public class KafkaConfiguration {
     private String securityProtocol;
 
     @Bean
-    public ProducerFactory<String, String> producerFactory() {
+    public ProducerFactory<String, String> userProducerFactory() {
         return new DefaultKafkaProducerFactory<>(Map.of(
                 ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers,
                 "sasl.mechanism", saslMechanism,
@@ -40,7 +40,7 @@ public class KafkaConfiguration {
     }
 
     @Bean
-    public KafkaTemplate<String, String> kafkaTemplate() {
-        return new KafkaTemplate<>(producerFactory());
+    public KafkaTemplate<String, String> userKafkaTemplate() {
+        return new KafkaTemplate<>(userProducerFactory());
     }
 }

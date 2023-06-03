@@ -17,11 +17,11 @@ public class StartupProducer implements StartupBroadcaster {
     private String newStartupTopic;
 
     @Autowired
-    private final KafkaTemplate<String, String> kafkaTemplate;
+    private final KafkaTemplate<String, String> startupKafkaTemplate;
 
     @Override
     public void emitNewStartup(Startup startup) {
         NewStartup newStartupEvent = new NewStartup(startup);
-        kafkaTemplate.send(newStartupTopic, newStartupEvent.toJson());
+        startupKafkaTemplate.send(newStartupTopic, newStartupEvent.toJson());
     }
 }

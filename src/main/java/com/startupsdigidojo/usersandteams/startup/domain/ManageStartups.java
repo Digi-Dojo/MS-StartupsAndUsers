@@ -36,11 +36,11 @@ public class ManageStartups {
             throw new IllegalArgumentException("Startup with name " + name + " already exists");
         }
 
-        Startup startup = new Startup(name, description);
+        Startup startup = startupRepository.save(new Startup(name, description));
 
         startupBroadcaster.emitNewStartup(startup);
 
-        return startupRepository.save(startup);
+        return startup;
     }
 
     /**

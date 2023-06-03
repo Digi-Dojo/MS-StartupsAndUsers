@@ -3,7 +3,7 @@ package com.startupsdigidojo.usersandteams.user.application.event;
 import lombok.Getter;
 import lombok.Setter;
 
-public abstract class Event {
+public abstract class UserEvent {
     @Setter
     @Getter
     protected String type;

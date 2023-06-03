@@ -11,16 +11,16 @@ import org.springframework.stereotype.Component;
 
 @RequiredArgsConstructor
 @Component
-public class Producer implements Broadcaster {
-    @Value("${com.startupsdigidojo.usersandteams.user.application.kafka.producer.topics.new_user}")
+public class UserProducer implements Broadcaster {
+    @Value("${com.startupsdigidojo.usersandteams.user.application.kafka.UserProducer.topics.new_user}")
     private String newUserTopic;
 
     @Autowired
-    private final KafkaTemplate<String, String> kafkaTemplate;
+    private final KafkaTemplate<String, String> userKafkaTemplate;
 
     @Override
     public void emitNewUser(User user){
         NewUser newUserEvent = new NewUser(user);
-        kafkaTemplate.send(newUserTopic, newUserEvent.toJson());
+        userKafkaTemplate.send(newUserTopic, newUserEvent.toJson());
     }
 }

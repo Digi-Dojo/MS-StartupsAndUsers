@@ -26,7 +26,7 @@ public class StartupKafkaConfiguration {
     private String securityProtocol;
 
     @Bean
-    public ProducerFactory<String, String> producerFactory() {
+    public ProducerFactory<String, String> startupProducerFactory() {
         return new DefaultKafkaProducerFactory<>(Map.of(
                 ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers,
                 "sasl.mechanism", saslMechanism,
@@ -40,7 +40,7 @@ public class StartupKafkaConfiguration {
     }
 
     @Bean
-    public KafkaTemplate<String, String> kafkaTemplate() {
-        return new KafkaTemplate<>(producerFactory());
+    public KafkaTemplate<String, String> startupKafkaTemplate() {
+        return new KafkaTemplate<>(startupProducerFactory());
     }
 }

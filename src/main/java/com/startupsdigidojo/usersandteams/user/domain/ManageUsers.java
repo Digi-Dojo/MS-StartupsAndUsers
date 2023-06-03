@@ -32,11 +32,11 @@ public class ManageUsers {
             throw new IllegalArgumentException("A user already exists with this mail address");
         }
 
-        User user = new User(name, mailAddress, password);
+        User user = userRepository.save(new User(name, mailAddress, password));
 
         broadcaster.emitNewUser(user);
 
-        return userRepository.save(user);
+        return user;
     }
 
     /**

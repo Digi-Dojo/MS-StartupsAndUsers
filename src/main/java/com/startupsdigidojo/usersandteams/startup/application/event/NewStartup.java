@@ -17,9 +17,13 @@ public class NewStartup {
 
     public String toJson(){
         return "{" +
-                "\"type\": \"" + type + "\"," +
-                "\"time\": \"" + System.currentTimeMillis() + "\"" +
-                "}" +
+                    "\"type\": \"" + type + "\"," +
+                    "\"payload\": {" +
+                        "\"id\": \"" + payload.getId() + "\"," +
+                        "\"name\": \"" + payload.getName() + "\"," +
+                        "\"description\": \"" + payload.getDescription() + "\"," +
+                        "\"time\": \"" + System.currentTimeMillis() + "\"" +
+                    "}" +
                 "}";
     }
 }
