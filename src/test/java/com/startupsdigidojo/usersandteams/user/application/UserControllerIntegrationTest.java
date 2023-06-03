@@ -76,6 +76,16 @@ public class UserControllerIntegrationTest {
         deleteUser1AfterUpdate();
     }
 
+    @Test
+    public void logInTest() throws Exception{
+        generateUser();
+        mockMvc.perform(post("/v1/users/login")
+                .contentType("application/json")
+                .content("{\"name\":\"Matteo\",\"mailAddress\":\"matteo.larcer@gmail.com\",\"password\":\"passwordMatteo\"}"))
+                .andExpect(status().isOk());
+        deleteUser();
+    }
+
     private void generateUser() throws Exception {
         mockMvc.perform(post("/v1/users/create")
                         .contentType("application/json")

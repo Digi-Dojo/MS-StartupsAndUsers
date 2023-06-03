@@ -1,5 +1,6 @@
 package com.startupsdigidojo.usersandteams.user.domain;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.nio.charset.StandardCharsets;
@@ -9,6 +10,13 @@ import java.security.NoSuchAlgorithmException;
 
 @Service
 public class LoginService {
+
+    private final UserBroadcaster userBroadcaster;
+
+    @Autowired
+    public LoginService(UserBroadcaster userBroadcaster) {
+        this.userBroadcaster = userBroadcaster;
+    }
 
     /**
      * The password and mail address of the user are put together in a string before being hashed,
@@ -65,6 +73,7 @@ public class LoginService {
         if (!hashedEnteredPassword.equals(user.getPassword())) {
             throw new IllegalArgumentException("Wrong password for this user");
         }
+        userBroadcaster.emitUserLogIn(user);
         return user;
     }
 }
