@@ -65,6 +65,7 @@ public class ManageStartups {
         }
         Startup startup = maybeStartup.get();
         startup.setName(newName);
+        startupBroadcaster.emitStartupNameUpdate(startup);
         return startupRepository.save(startup);
     }
 
@@ -85,6 +86,7 @@ public class ManageStartups {
 
         Startup startup = maybeStartup.get();
         startup.setDescription(description);
+        startupBroadcaster.emitStartupDescriptionUpdate(startup);
         return startupRepository.save(startup);
     }
 
@@ -101,6 +103,8 @@ public class ManageStartups {
             throw new IllegalArgumentException("Startup with name " + name + " does not exist");
         }
 
-        startupRepository.delete(maybeStartup.get());
+        Startup startup = maybeStartup.get();
+        startupBroadcaster.emitStartupDelete(startup);
+        startupRepository.delete(startup);
     }
 }
