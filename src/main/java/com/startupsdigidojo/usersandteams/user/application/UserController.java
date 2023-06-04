@@ -5,7 +5,10 @@ import com.startupsdigidojo.usersandteams.user.domain.ManageUsers;
 import com.startupsdigidojo.usersandteams.user.domain.SearchUsers;
 import com.startupsdigidojo.usersandteams.user.domain.User;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Map;
 
 @RestController
 @RequestMapping(path = "/v1/users")
@@ -13,6 +16,11 @@ public class UserController {
     private final ManageUsers manageUsers;
     private final SearchUsers searchUsers;
     private final LoginService loginService;
+
+    @GetMapping
+    public Map<String, Object> currentUser(OAuth2AuthenticationToken oAuth2Authentication){
+        return oAuth2Authentication.getPrincipal().getAttributes();
+    }
 
     @Autowired
     public UserController(ManageUsers manageUsers, SearchUsers searchUsers, LoginService loginService) {
