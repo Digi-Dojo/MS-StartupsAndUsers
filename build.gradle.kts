@@ -1,3 +1,4 @@
+
 plugins {
     java
     id("org.springframework.boot") version "3.0.4"
@@ -15,6 +16,9 @@ repositories {
 extra["springCloudVersion"] = "2022.0.2"
 
 dependencies {
+    implementation("org.springframework.boot:spring-boot-starter-security")
+    implementation(dependencyNotation = "org.springframework.security.oauth.boot:spring-security-oauth2-autoconfigure:2.1.7.RELEASE")
+    implementation("org.springframework.boot:spring-boot-starter-oauth2-client")
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("org.apache.kafka:kafka-streams")
