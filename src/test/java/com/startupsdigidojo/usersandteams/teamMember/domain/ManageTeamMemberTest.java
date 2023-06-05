@@ -31,10 +31,12 @@ public class ManageTeamMemberTest {
     private UserRepository userRepository;
     @Mock
     private StartupRepository startupRepository;
+    @Mock
+    private TeamMemberBroadcaster teamMemberBroadcaster;
 
     @BeforeEach
     void setUp() {
-        underTest = new ManageTeamMember(teamMemberRepository, userRepository, startupRepository);
+        underTest = new ManageTeamMember(teamMemberRepository, userRepository, startupRepository, teamMemberBroadcaster);
         user = new User("Pippo", "pippo@unibz.it", "password");
         user.setId(randomPositiveLong());
         startup = new Startup("DigiDojo", "Startup for digital services");

@@ -17,14 +17,16 @@ public class ManageTeamMember {
     private final TeamMemberRepository teamMemberRepository;
     private final SearchUsers searchUsers;
     private final SearchStartups searchStartups;
+    private final TeamMemberBroadcaster teamMemberBroadcaster;
 
 
     @Autowired
     public ManageTeamMember(TeamMemberRepository teamMemberRepository, UserRepository userRepository,
-                            StartupRepository startupRepository) {
+                            StartupRepository startupRepository, TeamMemberBroadcaster teamMemberBroadcaster) {
         this.teamMemberRepository = teamMemberRepository;
         searchUsers = new SearchUsers(userRepository);
         searchStartups = new SearchStartups(startupRepository);
+        this.teamMemberBroadcaster = teamMemberBroadcaster;
     }
 
     /**
@@ -142,7 +144,11 @@ public class ManageTeamMember {
                     + startup.getId() + " is already present");
         }
 
-        return teamMemberRepository.save(new TeamMember(user, role, startup));
+        TeamMember teamMember = teamMemberRepository.save(new TeamMember(user, role, startup));
+
+        teamMemberBroadcaster.emitNewTeamMember(teamMember);
+
+        return teamMember;
     }
 
     /**
