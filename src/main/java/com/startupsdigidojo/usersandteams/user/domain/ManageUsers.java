@@ -34,7 +34,7 @@ public class ManageUsers {
 
         User user = userRepository.save(new User(name, mailAddress, password));
 
-        userBroadcaster.emitNewUser(user);
+        userBroadcaster.emitUserCreated(user);
 
         return user;
     }
@@ -53,6 +53,8 @@ public class ManageUsers {
 
         userRepository.delete(maybeUser.get());
 
+        userBroadcaster.emitUserDeleted(maybeUser.get());
+
         return true;
     }
 
@@ -63,6 +65,7 @@ public class ManageUsers {
      */
     public User updatePassword(User user, String newPassword) {
         user.setPassword(newPassword);
+        userBroadcaster.emitUserUpdated(user,"password");
         return userRepository.save(user);
     }
 
@@ -84,7 +87,11 @@ public class ManageUsers {
             throw new IllegalArgumentException("User with mail address " + oldMail + " does not exist");
         }
         User user = maybeUser.get();
+
         user.setMailAddress(newMail);
+
+        userBroadcaster.emitUserUpdated(user,"mailAddress");
+
         return userRepository.save(user);
     }
 }
