@@ -13,10 +13,10 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 @Component
 public class UserProducer implements UserBroadcaster {
-    @Value("${com.startupsdigidojo.usersandteams.user.application.kafka.UserProducer.topics.new_user}")
+    @Value("${com.startupsdigidojo.usersandteams.user.application.kafka.UserProducer.topics.user.created}")
     private String newUserTopic;
 
-    @Value("${com.startupsdigidojo.usersandteams.user.application.kafka.UserProducer.topics.user_log_in}")
+    @Value("${com.startupsdigidojo.usersandteams.user.application.kafka.UserProducer.topics.user.logged_in}")
     private String userLogInTopic;
 
     @Autowired

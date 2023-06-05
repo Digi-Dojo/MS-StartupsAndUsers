@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 @Component
 public class TeamMemberProducer implements TeamMemberBroadcaster {
-    @Value("${com.startupsdigidojo.usersandteams.teamMember.application.kafka.TeamMemberProducer.topics.new_team_member}")
+    @Value("${com.startupsdigidojo.usersandteams.teamMember.application.kafka.TeamMemberProducer.topics.startup.added_user}")
     private String newTeamMemberTopic;
 
     @Autowired
