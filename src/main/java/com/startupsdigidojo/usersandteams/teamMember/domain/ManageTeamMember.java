@@ -146,7 +146,7 @@ public class ManageTeamMember {
 
         TeamMember teamMember = teamMemberRepository.save(new TeamMember(user, role, startup));
 
-        teamMemberBroadcaster.emitNewTeamMember(teamMember);
+        teamMemberBroadcaster.emitStartupAddedUser(teamMember);
 
         return teamMember;
     }
@@ -163,6 +163,8 @@ public class ManageTeamMember {
         }
 
         teamMemberRepository.delete(maybeTeamMember.get());
+
+        teamMemberBroadcaster.emitStartupRemovedUser(maybeTeamMember.get());
     }
 
     /**

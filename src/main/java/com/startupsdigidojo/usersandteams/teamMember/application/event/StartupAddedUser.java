@@ -3,16 +3,16 @@ package com.startupsdigidojo.usersandteams.teamMember.application.event;
 import com.startupsdigidojo.usersandteams.teamMember.domain.TeamMember;
 import lombok.Getter;
 
-public class NewTeamMember extends TeamMemberEvent{
-    private final String NEW_TEAM_MEMBER = "New Team Member";
+public class StartupAddedUser extends TeamMemberEvent{
+    private final String STARTUP_ADDED_USER = "Startup Added User";
 
     @Getter
-    private String type = NEW_TEAM_MEMBER;
+    private String type = STARTUP_ADDED_USER;
 
     @Getter
     private TeamMember payload;
 
-    public NewTeamMember(TeamMember payload) {
+    public StartupAddedUser(TeamMember payload) {
         this.payload = payload;
     }
 

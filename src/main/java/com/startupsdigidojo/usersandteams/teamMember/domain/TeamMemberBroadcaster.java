@@ -1,5 +1,7 @@
 package com.startupsdigidojo.usersandteams.teamMember.domain;
 
 public interface TeamMemberBroadcaster {
-    void emitNewTeamMember(TeamMember teamMember);
+    void emitStartupAddedUser(TeamMember teamMember);
+
+    void emitStartupRemovedUser(TeamMember teamMember);
 }
