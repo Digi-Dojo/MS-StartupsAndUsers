@@ -39,7 +39,7 @@ public class ManageStartups {
 
         Startup startup = startupRepository.save(new Startup(name, description));
 
-        startupBroadcaster.emitNewStartup(startup);
+        startupBroadcaster.emitStartupCreated(startup);
 
         return startup;
     }
@@ -86,7 +86,7 @@ public class ManageStartups {
 
         Startup startup = maybeStartup.get();
         startup.setDescription(description);
-        //startupBroadcaster.emitStartupDescriptionUpdate(startup);
+        //startupBroadcaster.emitStartupUpdated(startup);
         return startupRepository.save(startup);
     }
 
@@ -104,7 +104,7 @@ public class ManageStartups {
         }
 
         Startup startup = maybeStartup.get();
-        //startupBroadcaster.emitStartupDelete(startup);
+        //startupBroadcaster.emitStartupDeleted(startup);
         startupRepository.delete(startup);
     }
 }

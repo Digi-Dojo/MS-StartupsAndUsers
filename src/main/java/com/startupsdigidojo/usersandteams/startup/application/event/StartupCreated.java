@@ -3,17 +3,17 @@ package com.startupsdigidojo.usersandteams.startup.application.event;
 import com.startupsdigidojo.usersandteams.startup.domain.Startup;
 import lombok.Getter;
 
-public class NewStartup {
+public class StartupCreated {
 
-    private static final String NEW_STARTUP = "New Startup";
+    private static final String STARTUP_CREATED = "Startup created";
 
     @Getter
-    private String type = NEW_STARTUP;
+    private String type = STARTUP_CREATED;
 
     @Getter
     private Startup payload;
 
-    public NewStartup(Startup payload){this.payload = payload;}
+    public StartupCreated(Startup payload){this.payload = payload;}
 
     public String toJson(){
         return "{" +

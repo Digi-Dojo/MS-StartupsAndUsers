@@ -1,9 +1,8 @@
 package com.startupsdigidojo.usersandteams.startup.application.kafka;
 
-import com.startupsdigidojo.usersandteams.startup.application.event.NewStartup;
-import com.startupsdigidojo.usersandteams.startup.application.event.StartupDelete;
-import com.startupsdigidojo.usersandteams.startup.application.event.StartupDescriptionUpdate;
-import com.startupsdigidojo.usersandteams.startup.application.event.StartupNameUpdate;
+import com.startupsdigidojo.usersandteams.startup.application.event.StartupCreated;
+import com.startupsdigidojo.usersandteams.startup.application.event.StartupDeleted;
+import com.startupsdigidojo.usersandteams.startup.application.event.StartupUpdated;
 import com.startupsdigidojo.usersandteams.startup.domain.Startup;
 import com.startupsdigidojo.usersandteams.startup.domain.StartupBroadcaster;
 import lombok.RequiredArgsConstructor;
@@ -34,26 +33,22 @@ public class StartupProducer implements StartupBroadcaster {
     private final KafkaTemplate<String, String> startupKafkaTemplate;
 
     @Override
-    public void emitNewStartup(Startup startup) {
-        NewStartup newStartupEvent = new NewStartup(startup);
-        startupKafkaTemplate.send(newStartupTopic, newStartupEvent.toJson());
+    public void emitStartupCreated(Startup startup) {
+        StartupCreated startupCreatedEvent = new StartupCreated(startup);
+        startupKafkaTemplate.send(newStartupTopic, startupCreatedEvent.toJson());
+    }
+
+
+
+    @Override
+    public void emitStartupUpdated(Startup startup) {
+        StartupUpdated startupUpdatedEvent = new StartupUpdated(startup);
+        startupKafkaTemplate.send(startupDescriptionUpdateTopic, startupUpdatedEvent.toJson());
     }
 
     @Override
-    public void emitStartupNameUpdate(Startup startup) {
-        StartupNameUpdate startupNameUpdateEvent = new StartupNameUpdate(startup);
-        startupKafkaTemplate.send(startupNameUpdateTopic, startupNameUpdateEvent.toJson());
-    }
-
-    @Override
-    public void emitStartupDescriptionUpdate(Startup startup) {
-        StartupDescriptionUpdate startupDescriptionUpdateEvent = new StartupDescriptionUpdate(startup);
-        startupKafkaTemplate.send(startupDescriptionUpdateTopic, startupDescriptionUpdateEvent.toJson());
-    }
-
-    @Override
-    public void emitStartupDelete(Startup startup) {
-        StartupDelete startupDeleteEvent = new StartupDelete(startup);
-        startupKafkaTemplate.send(startupDeleteTopic, startupDeleteEvent.toJson());
+    public void emitStartupDeleted(Startup startup) {
+        StartupDeleted startupDeletedEvent = new StartupDeleted(startup);
+        startupKafkaTemplate.send(startupDeleteTopic, startupDeletedEvent.toJson());
     }
 }
